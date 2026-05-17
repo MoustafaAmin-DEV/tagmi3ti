@@ -1,0 +1,16 @@
+    <p-card styleClass="part-card h-full">
+      <ng-template #header>
+        <div class="flex align-items-center gap-2 p-3">
+          <i [class]="'pi ' + (part().type | partTypeIcon) + ' text-2xl text-primary'"></i>
+          <span class="font-semibold">{{ part().name }}</span>
+        </div>
+      </ng-template>
+      <div class="flex flex-column gap-1 text-sm text-color-secondary">
+        @if (part().brand) {
+          <span>{{ 'store.brand' | translate }}: {{ part().brand }}</span>
+        }
+        @if (storePrice(); as price) {
+          <span class="text-primary font-bold">{{ price | number }} {{ 'common.currency' | translate }}</span>
+        }
+      </div>
+    </p-card>

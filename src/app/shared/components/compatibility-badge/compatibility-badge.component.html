@@ -1,0 +1,5 @@
+    @if (hasSelection()) {
+      <p-tag [severity]="severity()" [value]="label()" [icon]="icon()" />
+    } @else {
+      <p-tag severity="secondary" value="—" />
+    }

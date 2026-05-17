@@ -1,0 +1,202 @@
+@if (partsService.loading()) {
+  <p-message severity="info" [text]="'compat.loadingParts' | translate" styleClass="w-full mb-3" />
+}
+
+@if (partsService.loadError(); as err) {
+  <p-message severity="warn" [text]="err" styleClass="w-full mb-3" />
+  <div class="mb-4">
+    <p-button
+      [label]="'common.retry' | translate"
+      icon="pi pi-refresh"
+      [outlined]="true"
+      (onClick)="retryLoadParts()"
+      [loading]="partsService.loading()"
+    />
+  </div>
+}
+
+@if (!hideProgressPanel()) {
+  <app-build-progress-banner class="block mb-4" />
+}
+
+@if (partsService.storeFilterOptions().length > 2) {
+  <div class="surface-panel page-tool-form-panel mb-4">
+    <h3 class="page-tool-form-panel__title m-0">{{ 'compat.filterPartsFrom' | translate }}</h3>
+    <p class="page-tool-form-panel__hint m-0">{{ 'compat.filterHint' | translate }}</p>
+    <p-select
+      [options]="partsService.storeFilterOptions()"
+      optionLabel="label"
+      optionValue="value"
+      [ngModel]="partsService.storeFilter()"
+      (ngModelChange)="partsService.storeFilter.set($event)"
+      styleClass="w-full md:w-20rem"
+    />
+  </div>
+}
+
+<div class="grid">
+  @for (type of partTypes; track type) {
+    <div class="col-12 md:col-6">
+      <div class="part-slot-card surface-panel h-full flex flex-column gap-3">
+        <div class="part-slot__head m-0">
+          <span class="part-slot__icon"><i [class]="'pi ' + (type | partTypeIcon)"></i></span>
+          <span class="part-slot__label">{{ type | partTypeLabel }}</span>
+        </div>
+        <p-select
+          [options]="partsService.partsByType(type)"
+          optionLabel="displayName"
+          dataKey="id"
+          [placeholder]="('build.choosePart' | translate) + ' ' + (type | partTypeLabel)"
+          [loading]="partsService.loading()"
+          [ngModel]="partsService.selectedOption(type)"
+          (ngModelChange)="onPartChange(type, $event)"
+          styleClass="w-full"
+          [filter]="true"
+          [filterPlaceholder]="'compat.searchInList' | translate"
+        />
+        @if (partsService.selectedParts()[type]; as picked) {
+          <div class="part-slot__picked flex flex-column gap-2">
+            <p class="m-0 text-sm font-bold line-height-3">
+              {{ picked.displayName ?? picked.name }}
+            </p>
+            <div>
+              <span class="page-preview__label">{{ 'compat.briefSpecs' | translate }}</span>
+              @if (specRows(picked).length > 0) {
+                <ul class="page-parts-rows mt-2">
+                  @for (row of specRows(picked); track row.label + row.value) {
+                    <li class="page-parts-rows__item">
+                      <span class="page-parts-rows__type">{{ row.label }}</span>
+                      <span class="page-parts-rows__name">{{ row.value }}</span>
+                    </li>
+                  }
+                </ul>
+              } @else {
+                <p
+                  class="part-slot__detail-empty text-sm text-color-secondary m-0 mt-2 line-height-3"
+                >
+                  {{ 'compat.noSpecs' | translate }}
+                </p>
+              }
+            </div>
+          </div>
+        }
+        @if (storePrice(type); as price) {
+          <div class="text-primary font-bold text-lg border-top-1 surface-border pt-3 mt-auto">
+            {{
+              'compat.storePrice'
+                | translate: { price: (price | number), currency: ('common.currency' | translate) }
+            }}
+          </div>
+        }
+        <div class="flex flex-wrap gap-2 align-items-center">
+          <p-button
+            [label]="'common.search' | translate"
+            icon="pi pi-search"
+            [outlined]="true"
+            severity="secondary"
+            (onClick)="searchPart(type)"
+            [disabled]="!partsService.selectedParts()[type]"
+            [attr.aria-label]="'common.searchGoogle' | translate"
+          />
+          @if (partsService.selectedParts()[type]?.store_phone) {
+            <p-button
+              [label]="'common.whatsapp' | translate"
+              icon="pi pi-whatsapp"
+              severity="success"
+              [outlined]="true"
+              (onClick)="contactStore(type)"
+              [disabled]="!partsService.selectedParts()[type]"
+              [attr.aria-label]="'common.whatsappStore' | translate"
+            />
+          }
+        </div>
+      </div>
+    </div>
+  }
+</div>
+
+<p-card styleClass="mt-4 summary-bar">
+  <div
+    class="flex flex-column md:flex-row justify-content-between align-items-start md:align-items-center gap-3"
+  >
+    <div>
+      @if (partsService.totalPrice() > 0) {
+        <span class="text-sm text-color-secondary block mb-1">{{
+          'compat.storeTotal' | translate
+        }}</span>
+        <span class="text-3xl text-primary font-bold">
+          {{ partsService.totalPrice() | number }}
+          <span class="text-lg">{{ 'common.currency' | translate }}</span>
+        </span>
+      } @else {
+        <span class="text-sm text-color-secondary block mb-1">{{
+          'compat.pricesTitle' | translate
+        }}</span>
+        <span class="text-lg text-color-secondary">{{ 'compat.noStorePrices' | translate }}</span>
+      }
+    </div>
+    <app-compatibility-badge
+      [compatible]="partsService.isCompatible() && !hasErrors()"
+      [hasSelection]="hasAnySelection()"
+      [score]="hasAnySelection() ? partsService.compatibilityScore() : null"
+    />
+  </div>
+
+  @if (hasAnySelection()) {
+    <p-progressBar
+      class="mt-3 block"
+      [value]="partsService.compatibilityScore()"
+      [showValue]="true"
+      styleClass="compat-score-bar"
+    />
+    <p class="text-sm text-color-secondary m-0 mt-1">{{ compatScoreHint() }}</p>
+  }
+
+  @if (showSummary()) {
+    <div class="mt-3 flex flex-column gap-2">
+      @if (partsService.bottleneckWarning(); as warning) {
+        <p-message severity="warn" [text]="warning" />
+      }
+      @if (partsService.requiredPsuWatts() > 0) {
+        <p-message [severity]="psuAdequate() ? 'success' : 'warn'" [text]="psuMessage()" />
+      }
+    </div>
+  }
+
+  @for (issue of partsService.compatibilityIssues(); track issue.message) {
+    <p-message
+      class="mt-2 block"
+      [severity]="issue.type === 'error' ? 'error' : 'warn'"
+      [text]="issue.message"
+    />
+  }
+
+  <div class="mt-3">
+    <p-button
+      [label]="'build.saveBuild' | translate"
+      icon="pi pi-save"
+      (onClick)="openSaveDialog()"
+      [disabled]="!hasAnySelection()"
+    />
+  </div>
+</p-card>
+
+<p-dialog
+  [header]="'build.saveTitle' | translate"
+  [(visible)]="saveDialogVisible"
+  [modal]="true"
+  [style]="{ width: '90vw', maxWidth: '400px' }"
+>
+  <form class="flex flex-column gap-3" [formGroup]="saveForm" (ngSubmit)="saveBuild()">
+    <label for="buildName">{{ 'build.buildName' | translate }}</label>
+    <input
+      pInputText
+      id="buildName"
+      formControlName="name"
+      class="w-full"
+      [class.p-invalid]="saveNameInvalid()"
+    />
+    <app-field-error [control]="saveForm.get('name')" [submitted]="saveFormSubmitted()" />
+    <p-button type="submit" [label]="'build.save' | translate" icon="pi pi-check" [loading]="saving()" />
+  </form>
+</p-dialog>

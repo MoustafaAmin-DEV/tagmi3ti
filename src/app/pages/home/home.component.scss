@@ -1,0 +1,186 @@
+
+    .hero {
+
+      padding: 3.5rem 1.25rem 4rem;
+
+      background:
+
+        radial-gradient(ellipse 70% 80% at 50% -30%, color-mix(in srgb, var(--p-primary-500) 22%, transparent), transparent),
+
+        linear-gradient(180deg, color-mix(in srgb, var(--p-primary-500) 6%, var(--p-surface-ground)), var(--p-surface-ground));
+
+      border-bottom: 1px solid var(--p-content-border-color);
+
+    }
+
+
+
+    .hero__logo {
+      display: block;
+      margin-inline: auto;
+      margin-bottom: 0.75rem;
+      width: 4.5rem;
+      height: 4.5rem;
+      border-radius: 14px;
+      box-shadow: 0 8px 32px color-mix(in srgb, var(--p-primary-500) 24%, transparent);
+    }
+
+    .hero__badge {
+
+      display: inline-flex;
+
+      align-items: center;
+
+      gap: 0.4rem;
+
+      padding: 0.35rem 0.85rem;
+
+      border-radius: 999px;
+
+      font-size: 0.8rem;
+
+      font-weight: 600;
+
+      background: color-mix(in srgb, var(--p-primary-500) 14%, transparent);
+
+      color: var(--p-primary-700);
+
+      border: 1px solid color-mix(in srgb, var(--p-primary-400) 25%, transparent);
+
+      margin-bottom: 1.25rem;
+
+    }
+
+
+
+    .hero__title {
+
+      margin: 0;
+
+      font-size: clamp(2rem, 6vw, 2.75rem);
+
+      font-weight: 800;
+
+      line-height: 1.15;
+
+      letter-spacing: -0.03em;
+
+      background: linear-gradient(135deg, var(--p-text-color) 30%, var(--p-primary-600));
+
+      -webkit-background-clip: text;
+
+      background-clip: text;
+
+      color: transparent;
+
+    }
+
+
+
+    .hero__subtitle {
+
+      margin: 1rem auto 1.75rem;
+
+      max-width: 36rem;
+
+      font-size: 1.05rem;
+
+      line-height: 1.7;
+
+      color: var(--p-text-muted-color);
+
+    }
+
+
+
+    .hero__stat {
+
+      display: flex;
+
+      flex-direction: column;
+
+      align-items: center;
+
+      gap: 0.2rem;
+
+      min-width: 5.5rem;
+
+    }
+
+
+
+    .hero__stat-value {
+
+      font-size: 1.35rem;
+
+      font-weight: 800;
+
+      color: var(--p-primary-600);
+
+    }
+
+
+
+    .hero__stat-label {
+
+      font-size: 0.8rem;
+
+      color: var(--p-text-muted-color);
+
+    }
+
+
+
+    .section-title {
+
+      font-size: 1.35rem;
+
+      font-weight: 800;
+
+      margin: 0;
+
+    }
+
+
+
+    .feature-card__icon {
+
+      width: 3rem;
+
+      height: 3rem;
+
+      display: flex;
+
+      align-items: center;
+
+      justify-content: center;
+
+      border-radius: 14px;
+
+      font-size: 1.35rem;
+
+      background: color-mix(in srgb, var(--p-primary-500) 14%, transparent);
+
+      color: var(--p-primary-600);
+
+    }
+
+
+
+    .feature-card--gaming .feature-card__icon {
+
+      background: color-mix(in srgb, var(--p-purple-500) 14%, transparent);
+
+      color: var(--p-purple-600);
+
+    }
+
+
+
+    .feature-card--store .feature-card__icon {
+
+      background: color-mix(in srgb, var(--p-orange-500) 14%, transparent);
+
+      color: var(--p-orange-600);
+
+    }

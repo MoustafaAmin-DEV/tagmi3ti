@@ -1,0 +1,258 @@
+    <app-page-header
+        [title]="'compare.title' | translate"
+        icon="pi-arrows-h"
+        [eyebrow]="'compare.eyebrow' | translate"
+        [description]="'compare.description' | translate"
+      />
+
+    <div class="grid page-split-grid mb-4">
+      <div class="col-12 lg:col-5">
+        <div class="page-aside-shell">
+          <aside class="page-aside surface-panel h-full p-3">
+            <div class="page-aside__hero">
+              <span class="page-aside__icon" aria-hidden="true">
+                <i class="pi pi-arrows-h"></i>
+              </span>
+              <h3 class="m-0">{{ 'compare.smartTitle' | translate }}</h3>
+            </div>
+            <ul class="page-aside__list">
+              <li>
+                <i class="pi pi-list"></i>
+                <span>{{ 'compare.smart1' | translate }}</span>
+              </li>
+              <li>
+                <i class="pi pi-wallet"></i>
+                <span>{{ 'compare.smart2' | translate }}</span>
+              </li>
+              <li>
+                <i class="pi pi-trophy"></i>
+                <span>{{ 'compare.smart3' | translate }}</span>
+              </li>
+            </ul>
+          </aside>
+        </div>
+      </div>
+      <div class="col-12 lg:col-7">
+        <div class="surface-panel page-tool-form-panel">
+          <h2 class="page-tool-form-panel__title">{{ 'compare.pickTitle' | translate }}</h2>
+          <p class="page-tool-form-panel__hint m-0">{{ 'compare.pickHint' | translate }}</p>
+          <div class="grid">
+            <div class="col-12 md:col-6">
+              <label class="block mb-2 font-semibold">{{ 'compare.buildA' | translate }}</label>
+              <p-select
+                [options]="builds()"
+                optionLabel="name"
+                [ngModel]="buildA()"
+                (ngModelChange)="buildA.set($event)"
+                [placeholder]="'compare.pickPlaceholder' | translate"
+                styleClass="w-full"
+              />
+            </div>
+            <div class="col-12 md:col-6">
+              <label class="block mb-2 font-semibold">{{ 'compare.buildB' | translate }}</label>
+              <p-select
+                [options]="builds()"
+                optionLabel="name"
+                [ngModel]="buildB()"
+                (ngModelChange)="buildB.set($event)"
+                [placeholder]="'compare.pickPlaceholder' | translate"
+                styleClass="w-full"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+      @if (buildA() && buildB(); as _) {
+        @if (verdict(); as v) {
+          <p-card styleClass="mb-4 verdict-panel">
+            <div class="flex flex-column gap-3">
+              <h3 class="m-0 text-lg font-semibold">{{ 'compare.verdictTitle' | translate }}</h3>
+              @for (tip of v.recommendations; track tip) {
+                <p-message severity="info" [text]="tip" styleClass="w-full" />
+              }
+            </div>
+          </p-card>
+        }
+
+        <div class="grid mb-4">
+          @if (buildA(); as a) {
+            <div class="col-12 md:col-5">
+              <p-card
+                [header]="('common.buildA' | translate) + ' — ' + a.name"
+                styleClass="h-full compare-build-card"
+                [ngClass]="{ 'winner-outline': showPriceCompare() && verdict()?.priceWinner === 'A' }"
+              >
+                <div class="flex flex-wrap gap-2 mb-2">
+                  @if (showPriceCompare() && verdict()?.priceWinner === 'A') {
+                    <p-tag severity="success" [value]="'compare.tagCheaper' | translate" />
+                  }
+                  @if (verdict()?.compatWinner === 'A') {
+                    <p-tag severity="success" [value]="'compare.tagCompat' | translate" />
+                  }
+                </div>
+                <div class="flex flex-column gap-2">
+                  <app-compatibility-badge
+                    [compatible]="a.is_compatible"
+                    [hasSelection]="true"
+                    [score]="buildScore(a)"
+                  />
+                  @if (buildStoreTotal(a) > 0) {
+                    <div>
+                      <span class="text-color-secondary">{{ 'compare.storeTotal' | translate }} </span>
+                      <span class="text-xl font-bold text-primary"
+                        >{{ buildStoreTotal(a) | number }} {{ 'common.currency' | translate }}</span
+                      >
+                    </div>
+                  }
+                  @if (a.use_case) {
+                    <span class="text-sm text-color-secondary"
+                      >{{ 'compare.useCase' | translate }} {{ a.use_case }}</span
+                    >
+                  }
+                  <span class="text-sm text-color-secondary">
+                    {{ a.created_at | date: 'mediumDate' }}
+                  </span>
+                  <span class="text-sm">{{
+                    'compare.partsSelected' | translate: { count: partsCount(a) }
+                  }}</span>
+                </div>
+              </p-card>
+            </div>
+          }
+          @if (buildA() && buildB()) {
+            <div class="col-12 md:col-2 flex align-items-center justify-content-center py-3">
+              <span class="vs-badge">{{ 'common.vs' | translate }}</span>
+            </div>
+          }
+          @if (buildB(); as b) {
+            <div class="col-12 md:col-5">
+              <p-card
+                [header]="('common.buildB' | translate) + ' — ' + b.name"
+                styleClass="h-full compare-build-card"
+                [ngClass]="{ 'winner-outline': showPriceCompare() && verdict()?.priceWinner === 'B' }"
+              >
+                <div class="flex flex-wrap gap-2 mb-2">
+                  @if (showPriceCompare() && verdict()?.priceWinner === 'B') {
+                    <p-tag severity="success" [value]="'compare.tagCheaper' | translate" />
+                  }
+                  @if (verdict()?.compatWinner === 'B') {
+                    <p-tag severity="success" [value]="'compare.tagCompat' | translate" />
+                  }
+                </div>
+                <div class="flex flex-column gap-2">
+                  <app-compatibility-badge
+                    [compatible]="b.is_compatible"
+                    [hasSelection]="true"
+                    [score]="buildScore(b)"
+                  />
+                  @if (buildStoreTotal(b) > 0) {
+                    <div>
+                      <span class="text-color-secondary">{{ 'compare.storeTotal' | translate }} </span>
+                      <span class="text-xl font-bold text-primary"
+                        >{{ buildStoreTotal(b) | number }} {{ 'common.currency' | translate }}</span
+                      >
+                    </div>
+                  }
+                  @if (b.use_case) {
+                    <span class="text-sm text-color-secondary"
+                      >{{ 'compare.useCase' | translate }} {{ b.use_case }}</span
+                    >
+                  }
+                  <span class="text-sm text-color-secondary">
+                    {{ b.created_at | date: 'mediumDate' }}
+                  </span>
+                  <span class="text-sm">{{
+                    'compare.partsSelected' | translate: { count: partsCount(b) }
+                  }}</span>
+                </div>
+              </p-card>
+            </div>
+          }
+        </div>
+
+        <p-card [header]="'compare.partsDetail' | translate">
+          <p-table [value]="comparisonRows()" styleClass="p-datatable-sm compare-table">
+            <ng-template #header>
+              <tr>
+                <th style="width: 8rem">{{ 'compare.colPart' | translate }}</th>
+                <th>{{ 'compare.colBuildA' | translate }}</th>
+                <th>{{ 'compare.colBuildB' | translate }}</th>
+                <th style="width: 6rem">{{ 'compare.colDiff' | translate }}</th>
+              </tr>
+            </ng-template>
+            <ng-template #body let-row>
+              <tr [class.row-diff]="row.diff">
+                <td class="font-semibold">{{ row.label }}</td>
+                <td [ngClass]="cellClass(row, 'A')">
+                  @if (row.cellA.missing) {
+                    <span class="text-color-secondary">{{ 'common.dash' | translate }}</span>
+                  } @else {
+                    <div class="flex flex-column gap-1">
+                      <div class="flex align-items-center gap-2 flex-wrap">
+                        <span class="font-medium">{{ row.cellA.name }}</span>
+                        @if (row.priceWinner === 'A') {
+                          <p-tag severity="success" [value]="'compare.cheaper' | translate" />
+                        }
+                      </div>
+                      @if (row.cellA.specs) {
+                        <span class="text-sm text-color-secondary">{{ row.cellA.specs }}</span>
+                      }
+                      @if (row.cellA.price != null) {
+                        <span class="text-sm text-primary font-semibold"
+                          >{{ row.cellA.price | number }} {{ 'common.currency' | translate }}</span
+                        >
+                      }
+                    </div>
+                  }
+                </td>
+                <td [ngClass]="cellClass(row, 'B')">
+                  @if (row.cellB.missing) {
+                    <span class="text-color-secondary">{{ 'common.dash' | translate }}</span>
+                  } @else {
+                    <div class="flex flex-column gap-1">
+                      <div class="flex align-items-center gap-2 flex-wrap">
+                        <span class="font-medium">{{ row.cellB.name }}</span>
+                        @if (row.priceWinner === 'B') {
+                          <p-tag severity="success" [value]="'compare.cheaper' | translate" />
+                        }
+                      </div>
+                      @if (row.cellB.specs) {
+                        <span class="text-sm text-color-secondary">{{ row.cellB.specs }}</span>
+                      }
+                      @if (row.cellB.price != null) {
+                        <span class="text-sm text-primary font-semibold"
+                          >{{ row.cellB.price | number }} {{ 'common.currency' | translate }}</span
+                        >
+                      }
+                    </div>
+                  }
+                </td>
+                <td class="text-center">
+                  @if (!row.diff) {
+                    <p-tag severity="secondary" [value]="'compare.match' | translate" />
+                  } @else if (row.cellA.missing) {
+                    <p-tag severity="warn" [value]="'compare.onlyB' | translate" />
+                  } @else if (row.cellB.missing) {
+                    <p-tag severity="warn" [value]="'compare.onlyA' | translate" />
+                  } @else {
+                    <p-tag severity="warn" [value]="'compare.different' | translate" />
+                  }
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </p-card>
+      } @else if (buildA() || buildB()) {
+        <div class="empty-state surface-panel">
+          <i class="pi pi-arrows-h"></i>
+          <p class="m-0 font-semibold">{{ 'compare.pickBoth' | translate }}</p>
+        </div>
+      } @else if (builds().length === 0) {
+        <div class="empty-state surface-panel">
+          <i class="pi pi-inbox"></i>
+          <p class="m-0 font-semibold">{{ 'compare.noBuilds' | translate }}</p>
+          <p class="m-0 mt-2 text-sm">{{ 'compare.noBuildsHint' | translate }}</p>
+        </div>
+      }

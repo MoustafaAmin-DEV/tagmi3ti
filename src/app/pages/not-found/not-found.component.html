@@ -1,0 +1,47 @@
+    <app-page-header
+      [title]="'notFound.title' | translate"
+      icon="pi-exclamation-circle"
+      [description]="'notFound.description' | translate"
+    />
+    <div class="grid page-split-grid">
+      <div class="col-12 lg:col-4">
+        <div class="page-aside-shell">
+          <aside class="page-aside surface-panel h-full p-3">
+            <div class="page-aside__hero">
+              <span class="page-aside__icon" aria-hidden="true">
+                <i class="pi pi-home"></i>
+              </span>
+              <h3 class="m-0">{{ 'notFound.whatNow' | translate }}</h3>
+            </div>
+            <ul class="page-aside__list">
+              <li>
+                <i class="pi pi-check-circle"></i>
+                <span>{{ 'notFound.hint1' | translate }}</span>
+              </li>
+              <li>
+                <i class="pi pi-search"></i>
+                <span>{{ 'notFound.hint2' | translate }}</span>
+              </li>
+            </ul>
+          </aside>
+        </div>
+      </div>
+      <div class="col-12 lg:col-8 surface-panel page-tool-form-panel">
+        <div class="flex flex-wrap gap-2">
+          <p-button [label]="'nav.home' | translate" icon="pi pi-home" routerLink="/" />
+          <p-button
+            [label]="'nav.checker' | translate"
+            icon="pi pi-check-circle"
+            routerLink="/checker"
+            [outlined]="true"
+          />
+          <p-button
+            [label]="'nav.budget' | translate"
+            icon="pi pi-wrench"
+            routerLink="/budget"
+            [outlined]="true"
+            severity="secondary"
+          />
+        </div>
+      </div>
+    </div>

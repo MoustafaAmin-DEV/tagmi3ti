@@ -1,0 +1,7 @@
+    .progress-banner {
+      padding: 1.1rem 1.25rem;
+    }
+
+    :host ::ng-deep .progress-banner__bar.p-progressbar {
+      height: 0.68rem;
+    }

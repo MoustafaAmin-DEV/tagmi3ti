@@ -1,0 +1,57 @@
+    <app-page-header
+      [title]="'profile.title' | translate"
+      icon="pi-user"
+      [eyebrow]="'profile.eyebrow' | translate"
+      [description]="'profile.description' | translate"
+    />
+
+    <p-card styleClass="profile-card shadow-2">
+      @if (loading()) {
+        <p class="text-color-secondary m-0">{{ 'common.loading' | translate }}</p>
+      } @else {
+        <form class="flex flex-column gap-3" [formGroup]="profileForm" (ngSubmit)="save()">
+          <div class="flex flex-column gap-2">
+            <label for="profileEmail">{{ 'auth.email' | translate }}</label>
+            <input pInputText id="profileEmail" formControlName="email" class="w-full" />
+            <span class="text-sm text-color-secondary">{{ 'profile.emailHint' | translate }}</span>
+          </div>
+
+          <div class="flex flex-column gap-2">
+            <label for="profileDisplayName">{{ 'profile.displayName' | translate }} *</label>
+            <input
+              pInputText
+              id="profileDisplayName"
+              formControlName="displayName"
+              class="w-full"
+              [class.p-invalid]="controlInvalid('displayName')"
+            />
+            <app-field-error [control]="profileForm.get('displayName')" [submitted]="submitted()" />
+          </div>
+
+          <div class="grid">
+            <div class="col-12 md:col-6 flex flex-column gap-2">
+              <label for="profilePhone">{{ 'profile.phone' | translate }}</label>
+              <input
+                pInputText
+                id="profilePhone"
+                formControlName="phone"
+                class="w-full"
+                [class.p-invalid]="controlInvalid('phone')"
+              />
+              <app-field-error [control]="profileForm.get('phone')" [submitted]="submitted()" />
+            </div>
+            <div class="col-12 md:col-6 flex flex-column gap-2">
+              <label for="profileCity">{{ 'profile.city' | translate }}</label>
+              <input pInputText id="profileCity" formControlName="city" class="w-full" />
+            </div>
+          </div>
+
+          <p-button
+            type="submit"
+            [label]="'profile.save' | translate"
+            icon="pi pi-check"
+            [loading]="saving()"
+          />
+        </form>
+      }
+    </p-card>

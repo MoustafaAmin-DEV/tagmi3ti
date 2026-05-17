@@ -1,0 +1,20 @@
+    :host ::ng-deep .compat-score-bar.p-progressbar {
+      height: 0.65rem;
+    }
+
+    .part-slot-card {
+      padding: 1rem 1.15rem;
+    }
+
+    .part-slot__picked {
+      min-height: 0;
+    }
+
+    .part-slot__detail-empty {
+      padding: 0.25rem 0;
+    }
+
+    /* فصل بصري خفيف لسطر الاسم أسفله */
+    .part-slot__picked > p:first-child {
+      color: var(--p-text-color);
+    }

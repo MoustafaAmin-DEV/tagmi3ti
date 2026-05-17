@@ -1,0 +1,15 @@
+    .diff-cell {
+      background: color-mix(in srgb, var(--p-orange-500) 18%, transparent);
+    }
+    .winner-cell {
+      background: color-mix(in srgb, var(--p-green-500) 15%, transparent);
+    }
+    .missing-cell {
+      opacity: 0.55;
+    }
+    .compare-summary .vs-badge {
+      flex-shrink: 0;
+    }
+    .row-diff {
+      background: color-mix(in srgb, var(--p-orange-500) 6%, transparent);
+    }

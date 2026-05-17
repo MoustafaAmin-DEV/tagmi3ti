@@ -1,12 +1,19 @@
-import { Component, signal } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { Toast } from 'primeng/toast';
+import { NavbarComponent } from './shared/components/navbar/navbar.component';
+import { AppFooterComponent } from './shared/components/app-footer/app-footer.component';
+import { PwaInstallComponent } from './shared/components/pwa-install/pwa-install.component';
+import { ThemeService } from './core/services/theme.service';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  imports: [RouterOutlet, NavbarComponent, AppFooterComponent, PwaInstallComponent, Toast],
   templateUrl: './app.html',
-  styleUrl: './app.scss'
+  styleUrl: './app.scss',
 })
 export class App {
-  protected readonly title = signal('tagmi3ti');
+  constructor() {
+    inject(ThemeService);
+  }
 }

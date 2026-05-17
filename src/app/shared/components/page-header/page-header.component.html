@@ -1,0 +1,17 @@
+    <header class="page-header">
+      @if (icon()) {
+        <div class="page-header__icon" aria-hidden="true">
+          <i [class]="'pi ' + icon()"></i>
+        </div>
+      }
+      <div class="page-header__text">
+        @if (eyebrow()) {
+          <span class="page-eyebrow">{{ eyebrow() }}</span>
+        }
+        <h1 class="page-title">{{ title() }}</h1>
+        @if (description()) {
+          <p class="page-desc">{{ description() }}</p>
+        }
+        <ng-content />
+      </div>
+    </header>

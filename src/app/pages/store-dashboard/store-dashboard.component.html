@@ -1,0 +1,428 @@
+    <app-page-header
+        [title]="'store.title' | translate"
+        icon="pi-shop"
+        [eyebrow]="'store.eyebrow' | translate"
+        [description]="'store.intro' | translate"
+      />
+
+      @if (stores().length === 0 && !loadingStores()) {
+        <div class="grid page-split-grid">
+          <div class="col-12 lg:col-4 page-mobile-aside-first">
+            <div class="page-aside-shell">
+              <aside class="page-aside store-dashboard__aside h-full">
+                <div class="page-aside__hero">
+                  <span class="page-aside__icon" aria-hidden="true">
+                    <i class="pi pi-shop"></i>
+                  </span>
+                  <h3 class="m-0">{{ 'store.asideTrader' | translate }}</h3>
+                </div>
+                <ul class="page-aside__list">
+                  <li>
+                    <i class="pi pi-users"></i>
+                    <span>{{ 'store.asideTrader1' | translate }}</span>
+                  </li>
+                  <li>
+                    <i class="pi pi-file-import"></i>
+                    <span>{{ 'store.asideTrader2' | translate }}</span>
+                  </li>
+                  <li>
+                    <i class="pi pi-whatsapp"></i>
+                    <span>{{ 'store.asideTrader3' | translate }}</span>
+                  </li>
+                </ul>
+              </aside>
+            </div>
+          </div>
+          <div class="col-12 lg:col-8">
+            <p-card styleClass="surface-panel store-dashboard__onboard-card shadow-2">
+              <ng-template #header>
+                <div class="flex flex-column gap-2 p-4 pb-3 border-bottom-1 surface-border">
+                  <span class="page-eyebrow">{{ 'store.onboardTitle' | translate }}</span>
+                  <h2 class="m-0 text-xl font-bold">{{ 'store.onboardHeading' | translate }}</h2>
+                  <p class="m-0 text-sm text-color-secondary line-height-3">
+                    {{ 'store.onboardHint' | translate }}
+                  </p>
+                </div>
+              </ng-template>
+              <form (ngSubmit)="saveStore()" class="flex flex-column gap-3 max-w-36rem pt-3">
+                <app-store-form-fields
+                  [form]="storeForm"
+                  [submitted]="storeFormSubmitted()"
+                  [logoPreviewUrl]="logoPreviewUrl()"
+                  (logoFileSelected)="onStoreLogoSelected($event)"
+                  (logoRemoveRequested)="onStoreLogoRemove()"
+                />
+                <p-button type="submit" [label]="'store.createStore' | translate" icon="pi pi-plus" />
+              </form>
+            </p-card>
+          </div>
+        </div>
+      } @else {
+        <div class="grid page-split-grid">
+          <div class="col-12 lg:col-4 page-mobile-aside-first">
+            <div class="page-aside-shell">
+              <aside class="page-aside store-dashboard__aside h-full">
+                <div class="page-aside__hero">
+                  <span class="page-aside__icon" aria-hidden="true">
+                    <i class="pi pi-box"></i>
+                  </span>
+                  <h3 class="m-0">{{ 'store.catalogTitle' | translate }}</h3>
+                </div>
+                <ul class="page-aside__list">
+                  <li>
+                    <i class="pi pi-tag"></i>
+                    <span>{{ 'store.catalogPrice' | translate }}</span>
+                  </li>
+                  <li>
+                    <i class="pi pi-upload"></i>
+                    <span>{{ 'store.catalogImport' | translate }}</span>
+                  </li>
+                  <li>
+                    <i class="pi pi-shield"></i>
+                    <span>{{ 'store.catalogCompat' | translate }}</span>
+                  </li>
+                </ul>
+              </aside>
+            </div>
+          </div>
+          <div class="col-12 lg:col-8">
+            <div class="surface-panel store-dashboard__toolbar mb-4">
+              <span class="page-eyebrow">{{ 'store.yourStores' | translate }}</span>
+              <div class="flex flex-wrap gap-2 mt-2 align-items-center justify-content-between">
+                <div class="flex flex-wrap gap-2 align-items-center">
+                  @for (store of stores(); track store.id) {
+                    <p-button
+                      [label]="store.name"
+                      [severity]="activeStoreId() === store.id ? undefined : 'secondary'"
+                      [outlined]="activeStoreId() !== store.id"
+                      (onClick)="selectStore(store.id)"
+                      [styleClass]="activeStoreId() === store.id ? 'store-dashboard__store-chip store-dashboard__store-chip--active' : 'store-dashboard__store-chip'"
+                    />
+                  }
+                  <p-button
+                    [label]="'store.newStore' | translate"
+                    icon="pi pi-plus"
+                    [text]="true"
+                    severity="secondary"
+                    (onClick)="openNewStoreDialog()"
+                  />
+                </div>
+              </div>
+            </div>
+
+            @if (activeStore(); as store) {
+              <p-card styleClass="shadow-2 store-dashboard__parts-card">
+                <ng-template #header>
+                  <div class="flex justify-content-between align-items-start gap-3 flex-wrap p-4 pb-3">
+                    <div class="flex align-items-center gap-3">
+                      @if (store.logo_url) {
+                        <img
+                          [src]="store.logo_url"
+                          [alt]="store.name"
+                          class="store-dashboard__store-logo"
+                          width="48"
+                          height="48"
+                        />
+                      }
+                      <div class="flex flex-column gap-2">
+                        <span class="page-eyebrow">{{ 'store.storeParts' | translate }}</span>
+                        <h2 class="m-0 text-xl font-bold">{{ store.name }}</h2>
+                      </div>
+                    </div>
+                    <div class="flex flex-wrap gap-2 justify-content-end">
+                      <p-button
+                        [label]="'store.editStore' | translate"
+                        icon="pi pi-pencil"
+                        severity="secondary"
+                        [outlined]="true"
+                        (onClick)="openEditStoreDialog(store)"
+                      />
+                      <p-button
+                        [label]="'store.deleteStore' | translate"
+                        icon="pi pi-trash"
+                        severity="danger"
+                        [text]="true"
+                        (onClick)="confirmDeleteStore(store)"
+                      />
+                    </div>
+                  </div>
+                </ng-template>
+
+                <div class="flex flex-wrap gap-2 mb-4 align-items-center">
+                  <p-button [label]="'store.addPart' | translate" icon="pi pi-plus" (onClick)="openPartDialog()" />
+                  <p-button
+                    [label]="'store.importCsv' | translate"
+                    icon="pi pi-upload"
+                    severity="secondary"
+                    [outlined]="true"
+                    (onClick)="csvInput.click()"
+                  />
+                  <p-button
+                    [label]="'store.downloadTemplate' | translate"
+                    icon="pi pi-download"
+                    severity="secondary"
+                    [text]="true"
+                    (onClick)="downloadTemplate()"
+                  />
+                  <input
+                    #csvInput
+                    type="file"
+                    accept=".csv,.xlsx,.xls,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                    class="hidden"
+                    (change)="onCsvSelected($event)"
+                  />
+                </div>
+
+                <p-table
+                  [value]="storeParts()"
+                  [loading]="loadingParts()"
+                  dataKey="id"
+                  styleClass="p-datatable-sm store-dashboard-table"
+                  [paginator]="storeParts().length > 12"
+                  [rows]="12"
+                  [showCurrentPageReport]="true"
+                  [currentPageReportTemplate]="'common.paginator' | translate"
+                >
+                  <ng-template #header>
+                    <tr>
+                      <th>{{ 'common.name' | translate }}</th>
+                      <th>{{ 'common.type' | translate }}</th>
+                      <th>{{ 'store.priceCol' | translate }}</th>
+                      <th class="store-dashboard-actions-col"></th>
+                    </tr>
+                  </ng-template>
+                  <ng-template #body let-part>
+                    <tr>
+                      <td class="font-medium">{{ part.name }}</td>
+                      <td>{{ typeLabel(part.type) }}</td>
+                      <td>{{ part.market_price_egp ?? ('common.dash' | translate) }}</td>
+                      <td class="text-end">
+                        <p-button icon="pi pi-pencil" [text]="true" (onClick)="openPartDialog(part)" />
+                        <p-button
+                          icon="pi pi-trash"
+                          severity="danger"
+                          [text]="true"
+                          (onClick)="confirmDeletePart(part)"
+                        />
+                      </td>
+                    </tr>
+                  </ng-template>
+                  <ng-template #emptymessage>
+                    <tr>
+                      <td colspan="4" class="text-center py-5 text-color-secondary">
+                        <i class="pi pi-inbox text-4xl mb-3 block opacity-40"></i>
+                        {{ 'store.emptyParts' | translate }}
+                      </td>
+                    </tr>
+                  </ng-template>
+                </p-table>
+              </p-card>
+            }
+          </div>
+        </div>
+      }
+
+      <p-dialog
+        [header]="(isEditingStore() ? 'store.editStore' : 'store.newStore') | translate"
+        [(visible)]="showStoreDialog"
+        [modal]="true"
+        [style]="{ width: '95vw', maxWidth: '560px' }"
+        (onHide)="onStoreDialogHide()"
+      >
+        <form (ngSubmit)="saveStore()" class="flex flex-column gap-3">
+          <app-store-form-fields
+            [form]="storeForm"
+            [submitted]="storeFormSubmitted()"
+            [logoPreviewUrl]="logoPreviewUrl()"
+            (logoFileSelected)="onStoreLogoSelected($event)"
+            (logoRemoveRequested)="onStoreLogoRemove()"
+          />
+          <p-button
+            type="submit"
+            [label]="(isEditingStore() ? 'store.saveEdit' : 'store.create') | translate"
+            icon="pi pi-check"
+          />
+        </form>
+      </p-dialog>
+
+      <p-dialog
+        [header]="(editingPart() ? 'store.editPart' : 'store.addPart') | translate"
+        [(visible)]="partDialogVisible"
+        [modal]="true"
+        [style]="{ width: '95vw', maxWidth: '560px' }"
+      >
+        <form [formGroup]="partFormGroup" (ngSubmit)="savePart()" class="grid">
+          <div class="col-12">
+            <label class="block mb-1 font-semibold">{{ 'store.partName' | translate }} *</label>
+            <input
+              pInputText
+              formControlName="name"
+              class="w-full"
+              [class.p-invalid]="partControlInvalid('name')"
+            />
+            <app-field-error [control]="partFormGroup.get('name')" [submitted]="partFormSubmitted()" />
+          </div>
+          <div class="col-12 md:col-6">
+            <label class="block mb-1 font-semibold">{{ 'store.partType' | translate }} *</label>
+            <p-select
+              [options]="partTypeOptions()"
+              formControlName="type"
+              optionLabel="label"
+              optionValue="value"
+              [styleClass]="partControlInvalid('type') ? 'w-full p-invalid' : 'w-full'"
+            />
+            <app-field-error [control]="partFormGroup.get('type')" [submitted]="partFormSubmitted()" />
+          </div>
+          <div class="col-12 md:col-6">
+            <label class="block mb-1">{{ 'store.brand' | translate }}</label>
+            <input pInputText formControlName="brand" class="w-full" />
+          </div>
+          @if (showPartField('socket')) {
+            <div class="col-12 md:col-6">
+              <label class="block mb-1">{{ 'store.socket' | translate }}</label>
+              <input pInputText formControlName="socket" class="w-full" placeholder="AM5, AM4, LGA1700" />
+            </div>
+          }
+          @if (showPartField('ram_type')) {
+            <div class="col-12 md:col-6">
+              <label class="block mb-1">{{ 'store.ramType' | translate }}</label>
+              <input pInputText formControlName="ram_type" class="w-full" placeholder="DDR4, DDR5" />
+            </div>
+          }
+          @if (showPartField('tdp_watts')) {
+            <div class="col-12 md:col-6">
+              <label class="block mb-1">{{ 'store.tdp' | translate }}</label>
+              <p-inputNumber
+                formControlName="tdp_watts"
+                [styleClass]="partControlInvalid('tdp_watts') ? 'w-full p-invalid' : 'w-full'"
+              />
+              <app-field-error [control]="partFormGroup.get('tdp_watts')" [submitted]="partFormSubmitted()" />
+            </div>
+          }
+          <div class="col-12 md:col-6">
+            <label class="block mb-1">{{ 'store.priceLabel' | translate }}</label>
+            <p-inputNumber
+              formControlName="market_price_egp"
+              [styleClass]="partControlInvalid('market_price_egp') ? 'w-full p-invalid' : 'w-full'"
+            />
+            <app-field-error
+              [control]="partFormGroup.get('market_price_egp')"
+              [submitted]="partFormSubmitted()"
+            />
+          </div>
+          @if (showPartField('gpu_length_mm')) {
+            <div class="col-12 md:col-6">
+              <label class="block mb-1">{{ 'store.gpuLength' | translate }}</label>
+              <p-inputNumber
+                formControlName="gpu_length_mm"
+                [styleClass]="partControlInvalid('gpu_length_mm') ? 'w-full p-invalid' : 'w-full'"
+              />
+              <app-field-error [control]="partFormGroup.get('gpu_length_mm')" [submitted]="partFormSubmitted()" />
+            </div>
+          }
+          @if (showPartField('max_gpu_length_mm')) {
+            <div class="col-12 md:col-6">
+              <label class="block mb-1">{{ 'store.maxGpuLength' | translate }}</label>
+              <p-inputNumber
+                formControlName="max_gpu_length_mm"
+                [styleClass]="partControlInvalid('max_gpu_length_mm') ? 'w-full p-invalid' : 'w-full'"
+              />
+              <app-field-error
+                [control]="partFormGroup.get('max_gpu_length_mm')"
+                [submitted]="partFormSubmitted()"
+              />
+            </div>
+          }
+          @if (showPartField('psu_wattage')) {
+            <div class="col-12 md:col-6">
+              <label class="block mb-1">{{ 'store.psuWattage' | translate }}</label>
+              <p-inputNumber
+                formControlName="psu_wattage"
+                [styleClass]="partControlInvalid('psu_wattage') ? 'w-full p-invalid' : 'w-full'"
+              />
+              <app-field-error [control]="partFormGroup.get('psu_wattage')" [submitted]="partFormSubmitted()" />
+            </div>
+          }
+          <div class="col-12">
+            <p-button
+              type="submit"
+              [label]="(editingPart() ? 'store.saveEdit' : 'store.addPart') | translate"
+              icon="pi pi-check"
+              [loading]="savingPart()"
+            />
+          </div>
+        </form>
+      </p-dialog>
+
+      <p-dialog
+        [header]="'store.importTitle' | translate"
+        [(visible)]="importDialogVisible"
+        [modal]="true"
+        [style]="{ width: '95vw', maxWidth: '720px' }"
+      >
+        <p class="text-color-secondary text-sm mb-3">
+          {{ 'store.importHint' | translate }}
+        </p>
+
+        @if (importPreviewErrors().length > 0) {
+          <p-message severity="warn" class="mb-3 block">
+            <span class="block font-semibold mb-1">{{ 'store.importErrors' | translate }}</span>
+            @for (err of importPreviewErrors(); track err.row + err.message) {
+              <span class="block text-sm">{{
+                'store.importRow' | translate: { row: err.row, message: err.message }
+              }}</span>
+            }
+          </p-message>
+        }
+
+        @if (importPreviewParts().length > 0) {
+          <div class="flex flex-wrap gap-3 mb-3">
+            <span class="surface-100 border-round px-3 py-2 text-sm">
+              <i class="pi pi-check-circle text-green-500 ml-1"></i>
+              {{ 'store.importReady' | translate: { count: importPreviewParts().length } }}
+            </span>
+            @if (importPreviewErrors().length > 0) {
+              <span class="surface-100 border-round px-3 py-2 text-sm">
+                <i class="pi pi-exclamation-triangle text-orange-500 ml-1"></i>
+                {{ 'store.importSkipped' | translate: { count: importPreviewErrors().length } }}
+              </span>
+            }
+          </div>
+          <p-table
+            [value]="importPreviewParts().slice(0, 10)"
+            styleClass="p-datatable-sm mb-3"
+          >
+            <ng-template #header>
+              <tr>
+                <th>{{ 'common.name' | translate }}</th>
+                <th>{{ 'common.type' | translate }}</th>
+                <th>{{ 'common.price' | translate }}</th>
+              </tr>
+            </ng-template>
+            <ng-template #body let-row>
+              <tr>
+                <td>{{ row.name }}</td>
+                <td>{{ row.type }}</td>
+                <td>{{ row.market_price_egp ?? ('common.dash' | translate) }}</td>
+              </tr>
+            </ng-template>
+          </p-table>
+          @if (importPreviewParts().length > 10) {
+            <p class="text-sm text-color-secondary mb-3">
+              {{
+                'store.importPreviewMore'
+                  | translate: { count: importPreviewParts().length - 10 }
+              }}
+            </p>
+          }
+          <p-button
+            [label]="'store.confirmImport' | translate"
+            icon="pi pi-check"
+            (onClick)="confirmImport()"
+            [loading]="importing()"
+            [disabled]="importPreviewParts().length === 0"
+          />
+        }
+      </p-dialog>
+    <p-confirmDialog />
+

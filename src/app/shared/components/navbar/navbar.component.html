@@ -1,0 +1,138 @@
+<header class="app-navbar">
+  <div class="app-navbar__inner page-container">
+    <a
+      routerLink="/"
+      class="brand flex align-items-center gap-2 no-underline flex-shrink-0"
+      [attr.aria-label]="'nav.brandAria' | translate"
+    >
+      <img class="brand__mark" src="/logo.svg" alt="" decoding="async" />
+    </a>
+
+    <nav class="desktop-nav hidden lg:flex" [attr.aria-label]="'nav.main' | translate">
+      @for (item of menuItems; track item.routerLink) {
+        <a
+          [routerLink]="item.routerLink"
+          routerLinkActive="desktop-nav__link--active"
+          [routerLinkActiveOptions]="item.exact ? { exact: true } : { exact: false }"
+          class="desktop-nav__link no-underline text-color flex align-items-center gap-1"
+        >
+          <i [class]="item.icon" aria-hidden="true"></i>
+          <span>{{ item.labelKey | translate }}</span>
+        </a>
+      }
+    </nav>
+
+    <div class="navbar-actions flex align-items-center gap-1 flex-shrink-0">
+      <div class="navbar-actions-desktop hidden lg:flex align-items-center gap-1">
+        <p-button
+          [label]="locale.lang() === 'ar' ? 'EN' : 'ع'"
+          [text]="true"
+          [rounded]="true"
+          severity="secondary"
+          (onClick)="setLang(locale.lang() === 'ar' ? 'en' : 'ar')"
+          [attr.aria-label]="'lang.switch' | translate"
+        />
+        <p-button
+          [icon]="theme.isDark() ? 'pi pi-sun' : 'pi pi-moon'"
+          [text]="true"
+          [rounded]="true"
+          (onClick)="theme.toggle()"
+          [attr.aria-label]="(theme.isDark() ? 'theme.light' : 'theme.dark') | translate"
+        />
+        @if (auth.isLoggedIn) {
+          <a
+            routerLink="/profile"
+            routerLinkActive="navbar-profile-link--active"
+            class="navbar-profile-link hidden lg:inline text-sm font-semibold no-underline overflow-hidden text-overflow-ellipsis white-space-nowrap"
+            [attr.aria-label]="'nav.profile' | translate"
+          >
+            {{ userLabel() }}
+          </a>
+          <p-button
+            [label]="'auth.signOut' | translate"
+            icon="pi pi-sign-out"
+            [text]="true"
+            severity="secondary"
+            (onClick)="signOut()"
+          />
+        } @else {
+          <p-button
+            [label]="'auth.signIn' | translate"
+            icon="pi pi-user"
+            (onClick)="auth.requestLogin()"
+          />
+        }
+      </div>
+
+      <p-button
+        class="lg:hidden"
+        [text]="true"
+        icon="pi pi-bars"
+        (onClick)="mobileOpen = !mobileOpen"
+        [attr.aria-label]="'nav.menu' | translate"
+      />
+    </div>
+  </div>
+</header>
+
+@if (mobileOpen) {
+  <nav class="mobile-nav lg:hidden flex flex-column gap-1 p-3" [attr.aria-label]="'nav.mobile' | translate">
+    @for (item of menuItems; track item.routerLink) {
+      <a
+        [routerLink]="item.routerLink"
+        routerLinkActive="mobile-nav__link--active"
+        [routerLinkActiveOptions]="item.exact ? { exact: true } : { exact: false }"
+        class="mobile-nav__link p-3 border-round no-underline text-color flex align-items-center gap-2"
+        (click)="mobileOpen = false"
+      >
+        <i [class]="item.icon" aria-hidden="true"></i>
+        {{ item.labelKey | translate }}
+      </a>
+    }
+
+    <div class="mobile-nav__actions mt-2 pt-3 border-top-1 surface-border flex flex-column gap-2">
+      <p-button
+        [label]="locale.lang() === 'ar' ? 'English' : 'العربية'"
+        icon="pi pi-globe"
+        [outlined]="true"
+        styleClass="w-full"
+        (onClick)="setLang(locale.lang() === 'ar' ? 'en' : 'ar'); mobileOpen = false"
+      />
+      @if (auth.isLoggedIn) {
+        <a
+          routerLink="/profile"
+          routerLinkActive="mobile-nav__link--active"
+          class="mobile-nav__link p-3 border-round no-underline text-color flex align-items-center gap-2"
+          (click)="mobileOpen = false"
+        >
+          <i class="pi pi-user" aria-hidden="true"></i>
+          {{ userLabel() }}
+        </a>
+        <p-button
+          [label]="'auth.signOut' | translate"
+          icon="pi pi-sign-out"
+          severity="secondary"
+          [outlined]="true"
+          styleClass="w-full"
+          (onClick)="signOutFromMobile()"
+        />
+      } @else {
+        <p-button
+          [label]="'auth.signIn' | translate"
+          icon="pi pi-user"
+          styleClass="w-full"
+          (onClick)="loginFromMobile()"
+        />
+      }
+      <p-button
+        [label]="(theme.isDark() ? 'theme.light' : 'theme.dark') | translate"
+        [icon]="theme.isDark() ? 'pi pi-sun' : 'pi pi-moon'"
+        [outlined]="true"
+        styleClass="w-full"
+        (onClick)="toggleThemeMobile()"
+      />
+    </div>
+  </nav>
+}
+
+<app-auth-dialog />

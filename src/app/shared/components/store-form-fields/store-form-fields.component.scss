@@ -1,0 +1,41 @@
+.store-logo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+
+  &__preview {
+    width: 4.5rem;
+    height: 4.5rem;
+    border-radius: var(--p-border-radius-lg);
+    object-fit: cover;
+    border: 1px solid var(--p-content-border-color);
+    background: var(--p-surface-100);
+  }
+
+  &__placeholder {
+    width: 4.5rem;
+    height: 4.5rem;
+    border-radius: var(--p-border-radius-lg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px dashed var(--p-content-border-color);
+    color: var(--p-text-muted-color);
+    font-size: 1.5rem;
+  }
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: center;
+  }
+}
+
+.store-maps-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.875rem;
+}

@@ -1,0 +1,122 @@
+:host {
+  display: block;
+  position: sticky;
+  top: 0;
+  z-index: 1100;
+}
+
+.app-navbar {
+  background: color-mix(in srgb, var(--p-surface-0) 88%, transparent);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--p-content-border-color);
+}
+
+.app-navbar__inner {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-height: 3.5rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+.brand__mark {
+  width: 100px;
+  height: 70px;
+  flex-shrink: 0;
+  display: block;
+  object-fit: contain;
+}
+
+.desktop-nav {
+  flex: 1 1 auto;
+  justify-content: center;
+  align-items: center;
+  gap: 0.125rem;
+  flex-wrap: nowrap;
+  min-width: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.desktop-nav::-webkit-scrollbar {
+  display: none;
+}
+
+.desktop-nav__link {
+  flex-shrink: 0;
+  padding: 0.45rem 0.55rem;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 0.8125rem;
+  white-space: nowrap;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease;
+}
+
+.desktop-nav__link i {
+  font-size: 0.85rem;
+  opacity: 0.85;
+}
+
+.desktop-nav__link:hover {
+  background: color-mix(in srgb, var(--p-primary-500) 10%, transparent);
+}
+
+.desktop-nav__link--active {
+  background: color-mix(in srgb, var(--p-primary-500) 14%, transparent);
+  color: var(--p-primary-700);
+}
+
+.navbar-profile-link {
+  max-width: 11rem;
+  padding: 0.35rem 0.65rem;
+  border-radius: 10px;
+  color: var(--p-text-color);
+  transition:
+    background 0.15s ease,
+    color 0.15s ease;
+}
+
+.navbar-profile-link:hover {
+  background: color-mix(in srgb, var(--p-primary-500) 10%, transparent);
+  color: var(--p-primary-700);
+}
+
+.navbar-profile-link--active {
+  background: color-mix(in srgb, var(--p-primary-500) 14%, transparent);
+  color: var(--p-primary-700);
+}
+
+.navbar-actions {
+  margin-inline-start: auto;
+}
+
+.mobile-nav {
+  background: var(--p-surface-0);
+  border-bottom: 1px solid var(--p-content-border-color);
+}
+
+.mobile-nav__link--active {
+  background: color-mix(in srgb, var(--p-primary-500) 14%, transparent);
+  color: var(--p-primary-700);
+  font-weight: 700;
+}
+
+@media (min-width: 1200px) {
+  .desktop-nav__link {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+  }
+
+  .navbar-profile-link {
+    max-width: 12rem;
+  }
+}
+
+@media (min-width: 1400px) {
+  .app-navbar__inner {
+    max-width: 1320px;
+  }
+}

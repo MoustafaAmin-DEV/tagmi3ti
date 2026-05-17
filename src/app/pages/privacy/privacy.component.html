@@ -1,0 +1,89 @@
+    <div class="legal-page">
+      <app-page-header
+        [title]="'privacy.title' | translate"
+        icon="pi-shield"
+        [description]="'privacy.description' | translate"
+      />
+
+      <div class="grid page-split-grid">
+        <div class="col-12 lg:col-4">
+          <div class="page-aside-shell">
+            <aside class="page-aside surface-panel h-full p-3">
+              <div class="page-aside__hero">
+                <span class="page-aside__icon" aria-hidden="true">
+                  <i class="pi pi-list"></i>
+                </span>
+                <h3 class="m-0">{{ 'privacy.toc' | translate }}</h3>
+              </div>
+              <ul class="page-aside__list text-sm">
+                <li><i class="pi pi-angle-left"></i><span>{{ 'privacy.toc1' | translate }}</span></li>
+                <li><i class="pi pi-angle-left"></i><span>{{ 'privacy.toc2' | translate }}</span></li>
+                <li><i class="pi pi-angle-left"></i><span>{{ 'privacy.toc3' | translate }}</span></li>
+              </ul>
+              <div class="page-aside__footer">
+                {{ 'privacy.tocFooter' | translate }}
+              </div>
+            </aside>
+          </div>
+        </div>
+        <div class="col-12 lg:col-8">
+      <p-card styleClass="mb-3">
+        <section class="legal-section">
+          <h2>{{ 'privacy.s1Title' | translate }}</h2>
+          <ul>
+            <li>{{ 'privacy.s1i1' | translate }}</li>
+            <li>{{ 'privacy.s1i2' | translate }}</li>
+            <li>{{ 'privacy.s1i3' | translate }}</li>
+            <li>{{ 'privacy.s1i4' | translate }}</li>
+          </ul>
+        </section>
+
+        <section class="legal-section">
+          <h2>{{ 'privacy.s2Title' | translate }}</h2>
+          <ul>
+            <li>{{ 'privacy.s2i1' | translate }}</li>
+            <li>{{ 'privacy.s2i2' | translate }}</li>
+            <li>{{ 'privacy.s2i3' | translate }}</li>
+          </ul>
+        </section>
+
+        <section class="legal-section">
+          <h2>{{ 'privacy.s3Title' | translate }}</h2>
+          <p>{{ 'privacy.s3Body' | translate }}</p>
+        </section>
+
+        <section class="legal-section">
+          <h2>{{ 'privacy.s4Title' | translate }}</h2>
+          <p>{{ 'privacy.s4Body' | translate }}</p>
+        </section>
+
+        <section class="legal-section">
+          <h2>{{ 'privacy.s5Title' | translate }}</h2>
+          <p>{{ 'privacy.s5Body' | translate }}</p>
+        </section>
+
+        <section class="legal-section">
+          <h2>{{ 'privacy.s6Title' | translate }}</h2>
+          <ul>
+            <li>{{ 'privacy.s6i1' | translate }}</li>
+            <li>{{ 'privacy.s6i2' | translate }}</li>
+            <li>{{ 'privacy.s6i3' | translate }}</li>
+          </ul>
+        </section>
+
+        <section class="legal-section">
+          <h2>{{ 'privacy.s7Title' | translate }}</h2>
+          <p>
+            {{ 'privacy.s7Body' | translate }}
+            <a href="mailto:support@tagmi3ti.app" class="text-primary">support@tagmi3ti.app</a>
+          </p>
+          <p class="m-0">
+            <a routerLink="/about" class="text-primary no-underline font-semibold">{{
+              'privacy.s7Back' | translate
+            }}</a>
+          </p>
+        </section>
+      </p-card>
+        </div>
+      </div>
+    </div>

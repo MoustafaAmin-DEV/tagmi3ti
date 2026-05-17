@@ -1,0 +1,11 @@
+/** رمز مشاركة قصير (12 حرف hex) */
+export function generateShareSlug(): string {
+  const bytes = new Uint8Array(6);
+  crypto.getRandomValues(bytes);
+  return Array.from(bytes, (b) => b.toString(16).padStart(2, '0')).join('');
+}
+
+export function buildShareUrl(slug: string): string {
+  const base = typeof window !== 'undefined' ? window.location.origin : '';
+  return `${base}/b/${slug}`;
+}

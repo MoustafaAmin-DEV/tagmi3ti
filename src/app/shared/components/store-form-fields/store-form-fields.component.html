@@ -1,0 +1,215 @@
+<div class="flex flex-column gap-3" [formGroup]="form()">
+  <div class="flex flex-column gap-2">
+    <label>{{ 'store.logo' | translate }}</label>
+    <div class="store-logo">
+      @if (logoPreviewUrl()) {
+        <img class="store-logo__preview" [src]="logoPreviewUrl()!" [alt]="'store.logo' | translate" />
+      } @else {
+        <span class="store-logo__placeholder" aria-hidden="true">
+          <i class="pi pi-image"></i>
+        </span>
+      }
+      <div class="store-logo__actions">
+        <p-button
+          type="button"
+          [label]="'store.logoUpload' | translate"
+          icon="pi pi-upload"
+          severity="secondary"
+          [outlined]="true"
+          (onClick)="logoInput.click()"
+        />
+        @if (logoPreviewUrl()) {
+          <p-button
+            type="button"
+            [label]="'store.logoRemove' | translate"
+            icon="pi pi-times"
+            severity="danger"
+            [text]="true"
+            (onClick)="logoRemoveRequested.emit()"
+          />
+        }
+        <input
+          #logoInput
+          type="file"
+          accept="image/jpeg,image/png,image/webp,image/gif"
+          class="hidden"
+          (change)="onLogoChange($event)"
+        />
+      </div>
+    </div>
+    <span class="text-sm text-color-secondary">{{ 'store.logoHint' | translate }}</span>
+  </div>
+
+  <div class="flex flex-column gap-2">
+    <label class="font-semibold">{{ 'store.storeName' | translate }} *</label>
+    <input
+      pInputText
+      formControlName="name"
+      class="w-full"
+      [class.p-invalid]="invalid('name')"
+      [placeholder]="'store.storeNamePlaceholder' | translate"
+    />
+    <app-field-error [control]="form().get('name')" [submitted]="submitted()" />
+  </div>
+
+  <div class="flex flex-column gap-2">
+    <label>{{ 'store.phone' | translate }}</label>
+    <input
+      pInputText
+      formControlName="phone"
+      class="w-full"
+      [class.p-invalid]="invalid('phone')"
+      [placeholder]="'store.phonePlaceholder' | translate"
+      autocomplete="tel"
+    />
+    <span class="text-sm text-color-secondary">{{ 'store.phoneHint' | translate }}</span>
+    <app-field-error [control]="form().get('phone')" [submitted]="submitted()" />
+  </div>
+
+  <div class="grid">
+    <div class="col-12 md:col-6 flex flex-column gap-2">
+      <label>{{ 'store.city' | translate }}</label>
+      <input
+        pInputText
+        formControlName="city"
+        class="w-full"
+        [placeholder]="'store.cityPlaceholder' | translate"
+      />
+    </div>
+    <div class="col-12 md:col-6 flex flex-column gap-2">
+      <label>{{ 'store.area' | translate }}</label>
+      <input
+        pInputText
+        formControlName="area"
+        class="w-full"
+        [placeholder]="'store.areaPlaceholder' | translate"
+      />
+    </div>
+  </div>
+
+  <div class="flex flex-column gap-2">
+    <label>{{ 'store.address' | translate }}</label>
+    <input
+      pInputText
+      formControlName="address"
+      class="w-full"
+      [placeholder]="'store.addressPlaceholder' | translate"
+    />
+  </div>
+
+  <div class="flex flex-column gap-2">
+    <span class="font-semibold">{{ 'store.hoursSection' | translate }}</span>
+    <div class="grid">
+      <div class="col-12 md:col-6 flex flex-column gap-2">
+        <label>{{ 'store.hoursSatThu' | translate }}</label>
+        <input
+          pInputText
+          formControlName="hours_sat_thu"
+          class="w-full"
+          [placeholder]="'store.hoursSatThuPlaceholder' | translate"
+        />
+      </div>
+      <div class="col-12 md:col-6 flex flex-column gap-2">
+        <label>{{ 'store.hoursFri' | translate }}</label>
+        <input
+          pInputText
+          formControlName="hours_fri"
+          class="w-full"
+          [placeholder]="'store.hoursFriPlaceholder' | translate"
+        />
+      </div>
+    </div>
+    <div class="flex flex-column gap-2">
+      <label>{{ 'store.hoursNotes' | translate }}</label>
+      <input
+        pInputText
+        formControlName="hours_notes"
+        class="w-full"
+        [placeholder]="'store.hoursNotesPlaceholder' | translate"
+      />
+    </div>
+  </div>
+
+  <div class="flex flex-column gap-2">
+    <label>{{ 'store.about' | translate }}</label>
+    <textarea
+      pTextarea
+      formControlName="description"
+      class="w-full"
+      rows="3"
+      [placeholder]="'store.aboutPlaceholder' | translate"
+    ></textarea>
+  </div>
+
+  <div class="flex flex-column gap-2">
+    <span class="font-semibold">{{ 'store.mapsSection' | translate }}</span>
+    <label>{{ 'store.mapsUrl' | translate }}</label>
+    <input
+      pInputText
+      formControlName="maps_url"
+      class="w-full"
+      [class.p-invalid]="invalid('maps_url')"
+      [placeholder]="'store.mapsUrlPlaceholder' | translate"
+    />
+    <span class="text-sm text-color-secondary">{{ 'store.mapsUrlHint' | translate }}</span>
+    <app-field-error [control]="form().get('maps_url')" [submitted]="submitted()" />
+    @if (mapsHref(); as href) {
+      <a class="store-maps-link text-primary" [href]="href" target="_blank" rel="noopener noreferrer">
+        <i class="pi pi-map-marker"></i>
+        {{ 'store.mapsPreview' | translate }}
+      </a>
+    }
+    <div class="grid mt-1">
+      <div class="col-12 md:col-6 flex flex-column gap-2">
+        <label>{{ 'store.latitude' | translate }}</label>
+        <p-inputNumber
+          formControlName="latitude"
+          mode="decimal"
+          [minFractionDigits]="0"
+          [maxFractionDigits]="6"
+          [styleClass]="invalid('latitude') ? 'w-full p-invalid' : 'w-full'"
+          [placeholder]="'store.latitudePlaceholder' | translate"
+        />
+        <app-field-error [control]="form().get('latitude')" [submitted]="submitted()" />
+      </div>
+      <div class="col-12 md:col-6 flex flex-column gap-2">
+        <label>{{ 'store.longitude' | translate }}</label>
+        <p-inputNumber
+          formControlName="longitude"
+          mode="decimal"
+          [minFractionDigits]="0"
+          [maxFractionDigits]="6"
+          [styleClass]="invalid('longitude') ? 'w-full p-invalid' : 'w-full'"
+          [placeholder]="'store.longitudePlaceholder' | translate"
+        />
+        <app-field-error [control]="form().get('longitude')" [submitted]="submitted()" />
+      </div>
+    </div>
+  </div>
+
+  <div class="flex flex-column gap-2">
+    <label>{{ 'store.email' | translate }}</label>
+    <input
+      pInputText
+      type="email"
+      formControlName="email"
+      class="w-full"
+      [class.p-invalid]="invalid('email')"
+      [placeholder]="'store.emailPlaceholder' | translate"
+      autocomplete="email"
+    />
+    <app-field-error [control]="form().get('email')" [submitted]="submitted()" />
+  </div>
+
+  <div class="flex flex-column gap-2">
+    <label>{{ 'store.facebookUrl' | translate }}</label>
+    <input
+      pInputText
+      formControlName="facebook_url"
+      class="w-full"
+      [class.p-invalid]="invalid('facebook_url')"
+      [placeholder]="'store.facebookPlaceholder' | translate"
+    />
+    <app-field-error [control]="form().get('facebook_url')" [submitted]="submitted()" />
+  </div>
+</div>

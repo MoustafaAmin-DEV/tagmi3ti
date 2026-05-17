@@ -1,0 +1,10 @@
+    .budget-builder__aside {
+      border-radius: var(--app-radius-lg);
+      border: 1px solid color-mix(in srgb, var(--p-primary-400) 28%, var(--p-content-border-color));
+      box-shadow: var(--app-shadow);
+      padding: 1.35rem;
+    }
+
+    .budget-builder__main-panel {
+      min-height: 12rem;
+    }
