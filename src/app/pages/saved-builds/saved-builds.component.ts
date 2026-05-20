@@ -189,9 +189,7 @@ export class SavedBuildsComponent implements OnInit {
   }
 
   private patchBuildShareSlug(id: string, slug: string | null): void {
-    this.builds.update((list) =>
-      list.map((b) => (b.id === id ? { ...b, share_slug: slug } : b)),
-    );
+    this.builds.update((list) => list.map((b) => (b.id === id ? { ...b, share_slug: slug } : b)));
     const current = this.shareBuild();
     if (current?.id === id) {
       this.shareBuild.set({ ...current, share_slug: slug });
@@ -282,7 +280,9 @@ export class SavedBuildsComponent implements OnInit {
     if (!w) {
       return;
     }
-    w.document.write(`<pre dir="rtl" style="font-family:Cairo,sans-serif;padding:1.5rem">${text.replace(/</g, '&lt;')}</pre>`);
+    w.document.write(
+      `<pre dir="rtl" style="font-family:Cairo,sans-serif;padding:1.5rem">${text.replace(/</g, '&lt;')}</pre>`,
+    );
     w.document.close();
     w.print();
   }

@@ -48,11 +48,7 @@ export class SupabaseService {
       use_case: build.use_case ?? null,
       notes: build.notes ?? null,
     };
-    const { data, error } = await this.client
-      .from('saved_builds')
-      .insert(row)
-      .select()
-      .single();
+    const { data, error } = await this.client.from('saved_builds').insert(row).select().single();
     if (error) {
       throw error;
     }

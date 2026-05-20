@@ -197,6 +197,11 @@
       [class.p-invalid]="saveNameInvalid()"
     />
     <app-field-error [control]="saveForm.get('name')" [submitted]="saveFormSubmitted()" />
-    <p-button type="submit" [label]="'build.save' | translate" icon="pi pi-check" [loading]="saving()" />
+    <p-button
+      type="submit"
+      [label]="'build.save' | translate"
+      icon="pi pi-check"
+      [loading]="saving()"
+    />
   </form>
 </p-dialog>

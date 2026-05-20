@@ -212,10 +212,7 @@ export class StoreDashboardComponent implements OnInit {
         this.messageService.add({
           severity: 'error',
           summary: this.translate.instant('toast.fileError'),
-          detail:
-            e instanceof Error
-              ? e.message
-              : this.translate.instant('toast.fileReadFailed'),
+          detail: e instanceof Error ? e.message : this.translate.instant('toast.fileReadFailed'),
         });
       });
   }
@@ -234,7 +231,7 @@ export class StoreDashboardComponent implements OnInit {
       this.importPreviewParts.set([]);
       this.importPreviewErrors.set([]);
       await this.selectStore(storeId);
-      await this.partsService.loadParts();
+      await this.partsService.loadParts(true);
       this.messageService.add({
         severity: 'success',
         summary: this.translate.instant('toast.imported'),
@@ -468,13 +465,13 @@ export class StoreDashboardComponent implements OnInit {
     try {
       const editing = this.editingPart();
       if (editing) {
-        await this.storeService.updatePart(editing.id, input);
+        await this.storeService.updatePart(storeId, editing.id, input);
       } else {
         await this.storeService.addPart(storeId, input);
       }
       this.partDialogVisible = false;
       await this.selectStore(storeId);
-      await this.partsService.loadParts();
+      await this.partsService.loadParts(true);
       this.toastSuccess('store.partSaved');
     } catch (e) {
       this.toastError(e);
@@ -499,9 +496,9 @@ export class StoreDashboardComponent implements OnInit {
       return;
     }
     try {
-      await this.storeService.deletePart(id);
+      await this.storeService.deletePart(storeId, id);
       await this.selectStore(storeId);
-      await this.partsService.loadParts();
+      await this.partsService.loadParts(true);
       this.toastSuccess('store.deleted');
     } catch (e) {
       this.toastError(e);
@@ -523,7 +520,7 @@ export class StoreDashboardComponent implements OnInit {
       await this.storeService.deleteStore(id);
       this.activeStoreId.set(null);
       await this.loadStores();
-      await this.partsService.loadParts();
+      await this.partsService.loadParts(true);
       this.toastSuccess('store.deleted');
     } catch (e) {
       this.toastError(e);

@@ -5,7 +5,9 @@ export const routes: Routes = [
   {
     path: '',
     loadComponent: () =>
-      import('./shared/components/page-layout/page-layout.component').then((m) => m.PageLayoutComponent),
+      import('./shared/components/page-layout/page-layout.component').then(
+        (m) => m.PageLayoutComponent,
+      ),
     children: [
       {
         path: '',
@@ -22,7 +24,9 @@ export const routes: Routes = [
       {
         path: 'budget',
         loadComponent: () =>
-          import('./pages/budget-builder/budget-builder.component').then((m) => m.BudgetBuilderComponent),
+          import('./pages/budget-builder/budget-builder.component').then(
+            (m) => m.BudgetBuilderComponent,
+          ),
       },
       {
         path: 'ai',
@@ -39,7 +43,9 @@ export const routes: Routes = [
         path: 'compare',
         canActivate: [authGuard],
         loadComponent: () =>
-          import('./pages/compare-builds/compare-builds.component').then((m) => m.CompareBuildsComponent),
+          import('./pages/compare-builds/compare-builds.component').then(
+            (m) => m.CompareBuildsComponent,
+          ),
       },
       {
         path: 'store',
@@ -66,11 +72,13 @@ export const routes: Routes = [
       },
       {
         path: 'privacy',
-        loadComponent: () => import('./pages/privacy/privacy.component').then((m) => m.PrivacyComponent),
+        loadComponent: () =>
+          import('./pages/privacy/privacy.component').then((m) => m.PrivacyComponent),
       },
       {
         path: '**',
-        loadComponent: () => import('./pages/not-found/not-found.component').then((m) => m.NotFoundComponent),
+        loadComponent: () =>
+          import('./pages/not-found/not-found.component').then((m) => m.NotFoundComponent),
       },
     ],
   },

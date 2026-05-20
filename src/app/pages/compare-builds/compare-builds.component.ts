@@ -15,7 +15,11 @@ import { PART_TYPES } from '../../core/constants/part-types';
 import { CompatibilityBadgeComponent } from '../../shared/components/compatibility-badge/compatibility-badge.component';
 import { CompatibilityService } from '../../core/services/compatibility.service';
 import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
-import { getStorePrice, sumStorePrices, buildHasStorePrices } from '../../core/utils/part-price.util';
+import {
+  getStorePrice,
+  sumStorePrices,
+  buildHasStorePrices,
+} from '../../core/utils/part-price.util';
 import { LocaleService } from '../../core/i18n/locale.service';
 interface CompareRow {
   type: PartType;

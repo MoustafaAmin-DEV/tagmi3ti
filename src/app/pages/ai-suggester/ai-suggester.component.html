@@ -1,181 +1,187 @@
-    <app-page-header
-      [title]="'ai.title' | translate"
-      icon="pi-sparkles"
-      [eyebrow]="'ai.eyebrow' | translate"
-      [description]="'ai.description' | translate"
-    />
+<app-page-header
+  [title]="'ai.title' | translate"
+  icon="pi-sparkles"
+  [eyebrow]="'ai.eyebrow' | translate"
+  [description]="'ai.description' | translate"
+/>
 
-    @if (partsService.loadError(); as err) {
-      <p-message severity="warn" [text]="err" styleClass="w-full mb-3 block" />
+@if (partsService.loadError(); as err) {
+  <p-message severity="warn" [text]="err" styleClass="w-full mb-3 block" />
+  <p-button
+    class="mb-4"
+    [label]="'common.reloadParts' | translate"
+    icon="pi pi-refresh"
+    [outlined]="true"
+    (onClick)="reloadParts()"
+    [loading]="partsService.loading()"
+  />
+}
+
+<div class="grid page-split-grid">
+  <div class="col-12 lg:col-7">
+    <div class="page-tool-form surface-panel">
+      <h2 class="page-tool-form__title">{{ 'ai.formTitle' | translate }}</h2>
+      <p class="page-tool-form__hint">{{ 'ai.formHint' | translate }}</p>
+
+      <div class="page-field">
+        <label class="page-field__label">{{ 'ai.useCase' | translate }}</label>
+        <p-selectButton
+          [options]="useCaseOptions()"
+          [(ngModel)]="useCase"
+          optionLabel="label"
+          optionValue="value"
+          styleClass="ai-select w-full"
+        />
+      </div>
+
+      <div class="page-field">
+        <label class="page-field__label">{{ 'ai.level' | translate }}</label>
+        <p-selectButton
+          [options]="levelOptions()"
+          [(ngModel)]="level"
+          optionLabel="label"
+          optionValue="value"
+          styleClass="ai-select w-full"
+        />
+      </div>
+
       <p-button
-        class="mb-4"
-        [label]="'common.reloadParts' | translate"
-        icon="pi pi-refresh"
-        [outlined]="true"
-        (onClick)="reloadParts()"
-        [loading]="partsService.loading()"
+        [label]="'ai.suggest' | translate"
+        icon="pi pi-sparkles"
+        styleClass="w-full ai-submit"
+        (onClick)="suggest()"
+        [loading]="loading()"
+        [disabled]="loading() || partsService.catalogEmpty()"
+      />
+    </div>
+  </div>
+
+  <div class="col-12 lg:col-5 page-mobile-aside-first">
+    <div class="page-aside-shell">
+      <aside class="page-aside surface-panel h-full">
+        <div class="page-aside__hero">
+          <span class="page-aside__icon" aria-hidden="true">
+            <i class="pi pi-sparkles"></i>
+          </span>
+          <h3 class="m-0">{{ 'ai.howTitle' | translate }}</h3>
+        </div>
+        <ul class="page-aside__list">
+          <li>
+            <i class="pi pi-check-circle"></i>
+            <span>{{ 'ai.how1' | translate }}</span>
+          </li>
+          <li>
+            <i class="pi pi-check-circle"></i>
+            <span>{{ 'ai.how2' | translate }}</span>
+          </li>
+          <li>
+            <i class="pi pi-check-circle"></i>
+            <span>{{ 'ai.how3' | translate }}</span>
+          </li>
+        </ul>
+        <div class="page-aside__footer p-0 pt-3 border-top-1 surface-border">
+          <span class="page-preview__label">{{ 'ai.currentChoice' | translate }}</span>
+          <div class="page-preview__chips">
+            <span class="page-chip">
+              <i [class]="useCaseIcon()"></i>
+              {{ useCaseLabel() }}
+            </span>
+            <span class="page-chip page-chip--muted">
+              <i class="pi pi-sliders-h"></i>
+              {{ levelLabel() }}
+            </span>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+</div>
+
+@if (loading()) {
+  <div class="surface-panel mt-4 flex flex-column align-items-center gap-3 py-5">
+    <p-progressSpinner strokeWidth="4" />
+    <span class="text-color-secondary font-semibold">{{ 'ai.loading' | translate }}</span>
+  </div>
+}
+
+@if (error()) {
+  <p-message severity="error" [text]="error()!" class="mt-4 block w-full" />
+}
+
+@if (suggestedBuild(); as build) {
+  <p-card styleClass="mt-4 ai-result surface-panel">
+    <ng-template #header>
+      <div
+        class="ai-result__head flex justify-content-between align-items-start gap-3 flex-wrap p-3"
+      >
+        <div>
+          <span class="page-eyebrow">{{ 'common.result' | translate }}</span>
+          <h3 class="m-0 mt-1 text-xl font-bold">{{ build.name }}</h3>
+        </div>
+        <app-compatibility-badge
+          [compatible]="buildCompatible()"
+          [hasSelection]="true"
+          [score]="resultScore()"
+        />
+      </div>
+    </ng-template>
+
+    @if (build.notes) {
+      <p class="text-color-secondary line-height-3 mt-0 mb-3">{{ build.notes }}</p>
+    }
+
+    <ul class="page-parts-rows">
+      @for (type of partTypes; track type) {
+        @if (build.parts[type]; as part) {
+          <li class="page-parts-rows__item">
+            <span class="page-parts-rows__type">{{ type | partTypeLabel }}</span>
+            <span class="page-parts-rows__name">{{ part.name }}</span>
+          </li>
+        }
+      }
+    </ul>
+
+    @for (issue of build.compatibility_issues ?? []; track issue.message) {
+      <p-message
+        class="mt-2 block"
+        [severity]="issue.type === 'error' ? 'error' : 'warn'"
+        [text]="issue.message"
       />
     }
 
-    <div class="grid page-split-grid">
-      <div class="col-12 lg:col-7">
-        <div class="page-tool-form surface-panel">
-          <h2 class="page-tool-form__title">{{ 'ai.formTitle' | translate }}</h2>
-          <p class="page-tool-form__hint">{{ 'ai.formHint' | translate }}</p>
-
-          <div class="page-field">
-            <label class="page-field__label">{{ 'ai.useCase' | translate }}</label>
-            <p-selectButton
-              [options]="useCaseOptions()"
-              [(ngModel)]="useCase"
-              optionLabel="label"
-              optionValue="value"
-              styleClass="ai-select w-full"
-            />
-          </div>
-
-          <div class="page-field">
-            <label class="page-field__label">{{ 'ai.level' | translate }}</label>
-            <p-selectButton
-              [options]="levelOptions()"
-              [(ngModel)]="level"
-              optionLabel="label"
-              optionValue="value"
-              styleClass="ai-select w-full"
-            />
-          </div>
-
-          <p-button
-            [label]="'ai.suggest' | translate"
-            icon="pi pi-sparkles"
-            styleClass="w-full ai-submit"
-            (onClick)="suggest()"
-            [loading]="loading()"
-            [disabled]="loading() || partsService.catalogEmpty()"
-          />
-        </div>
-      </div>
-
-      <div class="col-12 lg:col-5 page-mobile-aside-first">
-        <div class="page-aside-shell">
-          <aside class="page-aside surface-panel h-full">
-            <div class="page-aside__hero">
-              <span class="page-aside__icon" aria-hidden="true">
-                <i class="pi pi-sparkles"></i>
-              </span>
-              <h3 class="m-0">{{ 'ai.howTitle' | translate }}</h3>
-            </div>
-            <ul class="page-aside__list">
-              <li>
-                <i class="pi pi-check-circle"></i>
-                <span>{{ 'ai.how1' | translate }}</span>
-              </li>
-              <li>
-                <i class="pi pi-check-circle"></i>
-                <span>{{ 'ai.how2' | translate }}</span>
-              </li>
-              <li>
-                <i class="pi pi-check-circle"></i>
-                <span>{{ 'ai.how3' | translate }}</span>
-              </li>
-            </ul>
-            <div class="page-aside__footer p-0 pt-3 border-top-1 surface-border">
-              <span class="page-preview__label">{{ 'ai.currentChoice' | translate }}</span>
-              <div class="page-preview__chips">
-                <span class="page-chip">
-                  <i [class]="useCaseIcon()"></i>
-                  {{ useCaseLabel() }}
-                </span>
-                <span class="page-chip page-chip--muted">
-                  <i class="pi pi-sliders-h"></i>
-                  {{ levelLabel() }}
-                </span>
-              </div>
-            </div>
-          </aside>
-        </div>
-      </div>
+    <div class="flex flex-wrap gap-2 mt-4">
+      <p-button
+        [label]="'build.saveBuild' | translate"
+        icon="pi pi-save"
+        (onClick)="openSaveDialog()"
+      />
+      <p-button
+        [label]="'build.newSuggest' | translate"
+        icon="pi pi-refresh"
+        [outlined]="true"
+        severity="secondary"
+        (onClick)="suggest()"
+        [loading]="loading()"
+      />
     </div>
+  </p-card>
+}
 
-    @if (loading()) {
-      <div class="surface-panel mt-4 flex flex-column align-items-center gap-3 py-5">
-        <p-progressSpinner strokeWidth="4" />
-        <span class="text-color-secondary font-semibold">{{ 'ai.loading' | translate }}</span>
-      </div>
-    }
-
-    @if (error()) {
-      <p-message severity="error" [text]="error()!" class="mt-4 block w-full" />
-    }
-
-    @if (suggestedBuild(); as build) {
-      <p-card styleClass="mt-4 ai-result surface-panel">
-        <ng-template #header>
-          <div class="ai-result__head flex justify-content-between align-items-start gap-3 flex-wrap p-3">
-            <div>
-              <span class="page-eyebrow">{{ 'common.result' | translate }}</span>
-              <h3 class="m-0 mt-1 text-xl font-bold">{{ build.name }}</h3>
-            </div>
-            <app-compatibility-badge
-              [compatible]="buildCompatible()"
-              [hasSelection]="true"
-              [score]="resultScore()"
-            />
-          </div>
-        </ng-template>
-
-        @if (build.notes) {
-          <p class="text-color-secondary line-height-3 mt-0 mb-3">{{ build.notes }}</p>
-        }
-
-        <ul class="page-parts-rows">
-          @for (type of partTypes; track type) {
-            @if (build.parts[type]; as part) {
-              <li class="page-parts-rows__item">
-                <span class="page-parts-rows__type">{{ type | partTypeLabel }}</span>
-                <span class="page-parts-rows__name">{{ part.name }}</span>
-              </li>
-            }
-          }
-        </ul>
-
-        @for (issue of build.compatibility_issues ?? []; track issue.message) {
-          <p-message
-            class="mt-2 block"
-            [severity]="issue.type === 'error' ? 'error' : 'warn'"
-            [text]="issue.message"
-          />
-        }
-
-        <div class="flex flex-wrap gap-2 mt-4">
-          <p-button [label]="'build.saveBuild' | translate" icon="pi pi-save" (onClick)="openSaveDialog()" />
-          <p-button
-            [label]="'build.newSuggest' | translate"
-            icon="pi pi-refresh"
-            [outlined]="true"
-            severity="secondary"
-            (onClick)="suggest()"
-            [loading]="loading()"
-          />
-        </div>
-      </p-card>
-    }
-
-    <p-dialog
-      [header]="'build.saveTitle' | translate"
-      [(visible)]="saveDialogVisible"
-      [modal]="true"
-      [style]="{ width: '90vw', maxWidth: '400px' }"
-    >
-      <form class="flex flex-column gap-3" [formGroup]="saveForm" (ngSubmit)="saveSuggested()">
-        <input
-          pInputText
-          formControlName="name"
-          [placeholder]="'build.buildName' | translate"
-          class="w-full"
-          [class.p-invalid]="saveNameInvalid()"
-        />
-        <app-field-error [control]="saveForm.get('name')" [submitted]="saveFormSubmitted()" />
-        <p-button type="submit" [label]="'build.save' | translate" [loading]="saving()" />
-      </form>
-    </p-dialog>
+<p-dialog
+  [header]="'build.saveTitle' | translate"
+  [(visible)]="saveDialogVisible"
+  [modal]="true"
+  [style]="{ width: '90vw', maxWidth: '400px' }"
+>
+  <form class="flex flex-column gap-3" [formGroup]="saveForm" (ngSubmit)="saveSuggested()">
+    <input
+      pInputText
+      formControlName="name"
+      [placeholder]="'build.buildName' | translate"
+      class="w-full"
+      [class.p-invalid]="saveNameInvalid()"
+    />
+    <app-field-error [control]="saveForm.get('name')" [submitted]="saveFormSubmitted()" />
+    <p-button type="submit" [label]="'build.save' | translate" [loading]="saving()" />
+  </form>
+</p-dialog>

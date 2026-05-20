@@ -1,4 +1,5 @@
 import { StoreInput } from '../models/store.model';
+import { formatEgyptPhoneForStorage } from './phone-policy.util';
 
 export function cleanStoreInput(input: StoreInput): Record<string, unknown> {
   const row: Record<string, unknown> = {
@@ -20,9 +21,17 @@ export function cleanStoreInput(input: StoreInput): Record<string, unknown> {
   ];
   for (const key of optionalText) {
     const val = input[key];
-    if (typeof val === 'string' && val.trim()) {
-      row[key] = val.trim();
+    if (typeof val !== 'string' || !val.trim()) {
+      continue;
     }
+    if (key === 'phone') {
+      const normalized = formatEgyptPhoneForStorage(val);
+      if (normalized) {
+        row[key] = normalized;
+      }
+      continue;
+    }
+    row[key] = val.trim();
   }
 
   if (input.logo_url === null) {

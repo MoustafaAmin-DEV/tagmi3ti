@@ -1,12 +1,17 @@
-    <footer class="app-footer">
-      <div class="page-container flex flex-column md:flex-row justify-content-between align-items-center gap-3 py-4">
-        <span class="text-sm text-color-secondary">
-          {{ 'footer.copyright' | translate: { year } }}
-        </span>
-        <nav class="flex flex-wrap gap-3 justify-content-center">
-          <a routerLink="/about" class="footer-link">{{ 'footer.about' | translate }}</a>
-          <a routerLink="/privacy" class="footer-link">{{ 'footer.privacy' | translate }}</a>
-          <a routerLink="/checker" class="footer-link">{{ 'footer.checker' | translate }}</a>
-        </nav>
-      </div>
-    </footer>
+<footer class="app-footer">
+  <div
+    class="page-container flex flex-column md:flex-row justify-content-between align-items-center gap-3 py-4"
+  >
+    <span class="text-sm text-color-secondary">
+      {{ 'footer.copyright' | translate: { year } }}
+    </span>
+    <nav class="flex flex-wrap gap-3 justify-content-center">
+      <a routerLink="/about" class="footer-link">{{ 'footer.about' | translate }}</a>
+      <a routerLink="/privacy" class="footer-link">{{ 'footer.privacy' | translate }}</a>
+      <a [href]="'mailto:' + supportEmail" class="footer-link">{{
+        'footer.support' | translate
+      }}</a>
+      <a routerLink="/checker" class="footer-link">{{ 'footer.checker' | translate }}</a>
+    </nav>
+  </div>
+</footer>

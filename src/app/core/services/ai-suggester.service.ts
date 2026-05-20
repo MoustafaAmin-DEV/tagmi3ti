@@ -23,11 +23,7 @@ export class AiSuggesterService {
   private readonly compatibility = inject(CompatibilityService);
 
   /** مجاني — يختار قطعًا متوافقة من القائمة بدون API مدفوع */
-  async suggestBuild(
-    useCase: UseCase,
-    level: BuildLevel,
-    availableParts: Part[],
-  ): Promise<Build> {
+  async suggestBuild(useCase: UseCase, level: BuildLevel, availableParts: Part[]): Promise<Build> {
     const build = this.suggestLocally(useCase, level, availableParts);
     const issues = this.compatibility.checkCompatibility(build.parts);
     build.compatibility_issues = issues;
@@ -35,11 +31,7 @@ export class AiSuggesterService {
     return build;
   }
 
-  private suggestLocally(
-    useCase: UseCase,
-    level: BuildLevel,
-    availableParts: Part[],
-  ): Build {
+  private suggestLocally(useCase: UseCase, level: BuildLevel, availableParts: Part[]): Build {
     const cpus = this.byType(availableParts, 'CPU');
     if (cpus.length === 0) {
       throw new Error('لا توجد معالجات في قاعدة البيانات. شغّل supabase/seed.sql');
@@ -178,11 +170,7 @@ export class AiSuggesterService {
     return parts.filter((p) => p.type === type);
   }
 
-  private sortByPerformanceTier(
-    items: Part[],
-    level: BuildLevel,
-    tierOffset: number,
-  ): Part[] {
+  private sortByPerformanceTier(items: Part[], level: BuildLevel, tierOffset: number): Part[] {
     const sorted = [...items].sort(
       (a, b) => (this.performanceScore(a) ?? 0) - (this.performanceScore(b) ?? 0),
     );
@@ -201,7 +189,10 @@ export class AiSuggesterService {
       return null;
     }
     const sorted = [...items].sort((a, b) => score(a) - score(b));
-    const idx = Math.max(0, Math.min(sorted.length - 1, this.tierIndex(sorted.length, level) + tierOffset));
+    const idx = Math.max(
+      0,
+      Math.min(sorted.length - 1, this.tierIndex(sorted.length, level) + tierOffset),
+    );
     return sorted[idx];
   }
 

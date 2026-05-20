@@ -1,186 +1,149 @@
+.hero {
+  padding: 3.5rem 1.25rem 4rem;
 
-    .hero {
+  background:
+    radial-gradient(
+      ellipse 70% 80% at 50% -30%,
+      color-mix(in srgb, var(--p-primary-500) 22%, transparent),
+      transparent
+    ),
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--p-primary-500) 6%, var(--p-surface-ground)),
+      var(--p-surface-ground)
+    );
 
-      padding: 3.5rem 1.25rem 4rem;
+  border-bottom: 1px solid var(--p-content-border-color);
+}
 
-      background:
+.hero__logo {
+  display: block;
+  margin-inline: auto;
+  margin-bottom: 0.75rem;
+  width: 4.5rem;
+  height: 4.5rem;
+  border-radius: 14px;
+  box-shadow: 0 8px 32px color-mix(in srgb, var(--p-primary-500) 24%, transparent);
+}
 
-        radial-gradient(ellipse 70% 80% at 50% -30%, color-mix(in srgb, var(--p-primary-500) 22%, transparent), transparent),
+.hero__badge {
+  display: inline-flex;
 
-        linear-gradient(180deg, color-mix(in srgb, var(--p-primary-500) 6%, var(--p-surface-ground)), var(--p-surface-ground));
+  align-items: center;
 
-      border-bottom: 1px solid var(--p-content-border-color);
+  gap: 0.4rem;
 
-    }
+  padding: 0.35rem 0.85rem;
 
+  border-radius: 999px;
 
+  font-size: 0.8rem;
 
-    .hero__logo {
-      display: block;
-      margin-inline: auto;
-      margin-bottom: 0.75rem;
-      width: 4.5rem;
-      height: 4.5rem;
-      border-radius: 14px;
-      box-shadow: 0 8px 32px color-mix(in srgb, var(--p-primary-500) 24%, transparent);
-    }
+  font-weight: 600;
 
-    .hero__badge {
+  background: color-mix(in srgb, var(--p-primary-500) 14%, transparent);
 
-      display: inline-flex;
+  color: var(--p-primary-700);
 
-      align-items: center;
+  border: 1px solid color-mix(in srgb, var(--p-primary-400) 25%, transparent);
 
-      gap: 0.4rem;
+  margin-bottom: 1.25rem;
+}
 
-      padding: 0.35rem 0.85rem;
+.hero__title {
+  margin: 0;
 
-      border-radius: 999px;
+  font-size: clamp(2rem, 6vw, 2.75rem);
 
-      font-size: 0.8rem;
+  font-weight: 800;
 
-      font-weight: 600;
+  line-height: 1.15;
 
-      background: color-mix(in srgb, var(--p-primary-500) 14%, transparent);
+  letter-spacing: -0.03em;
 
-      color: var(--p-primary-700);
+  background: linear-gradient(135deg, var(--p-text-color) 30%, var(--p-primary-600));
 
-      border: 1px solid color-mix(in srgb, var(--p-primary-400) 25%, transparent);
+  -webkit-background-clip: text;
 
-      margin-bottom: 1.25rem;
+  background-clip: text;
 
-    }
+  color: transparent;
+}
 
+.hero__subtitle {
+  margin: 1rem auto 1.75rem;
 
+  max-width: 36rem;
 
-    .hero__title {
+  font-size: 1.05rem;
 
-      margin: 0;
+  line-height: 1.7;
 
-      font-size: clamp(2rem, 6vw, 2.75rem);
+  color: var(--p-text-muted-color);
+}
 
-      font-weight: 800;
+.hero__stat {
+  display: flex;
 
-      line-height: 1.15;
+  flex-direction: column;
 
-      letter-spacing: -0.03em;
+  align-items: center;
 
-      background: linear-gradient(135deg, var(--p-text-color) 30%, var(--p-primary-600));
+  gap: 0.2rem;
 
-      -webkit-background-clip: text;
+  min-width: 5.5rem;
+}
 
-      background-clip: text;
+.hero__stat-value {
+  font-size: 1.35rem;
 
-      color: transparent;
+  font-weight: 800;
 
-    }
+  color: var(--p-primary-600);
+}
 
+.hero__stat-label {
+  font-size: 0.8rem;
 
+  color: var(--p-text-muted-color);
+}
 
-    .hero__subtitle {
+.section-title {
+  font-size: 1.35rem;
 
-      margin: 1rem auto 1.75rem;
+  font-weight: 800;
 
-      max-width: 36rem;
+  margin: 0;
+}
 
-      font-size: 1.05rem;
+.feature-card__icon {
+  width: 3rem;
 
-      line-height: 1.7;
+  height: 3rem;
 
-      color: var(--p-text-muted-color);
+  display: flex;
 
-    }
+  align-items: center;
 
+  justify-content: center;
 
+  border-radius: 14px;
 
-    .hero__stat {
+  font-size: 1.35rem;
 
-      display: flex;
+  background: color-mix(in srgb, var(--p-primary-500) 14%, transparent);
 
-      flex-direction: column;
+  color: var(--p-primary-600);
+}
 
-      align-items: center;
+.feature-card--gaming .feature-card__icon {
+  background: color-mix(in srgb, var(--p-purple-500) 14%, transparent);
 
-      gap: 0.2rem;
+  color: var(--p-purple-600);
+}
 
-      min-width: 5.5rem;
+.feature-card--store .feature-card__icon {
+  background: color-mix(in srgb, var(--p-orange-500) 14%, transparent);
 
-    }
-
-
-
-    .hero__stat-value {
-
-      font-size: 1.35rem;
-
-      font-weight: 800;
-
-      color: var(--p-primary-600);
-
-    }
-
-
-
-    .hero__stat-label {
-
-      font-size: 0.8rem;
-
-      color: var(--p-text-muted-color);
-
-    }
-
-
-
-    .section-title {
-
-      font-size: 1.35rem;
-
-      font-weight: 800;
-
-      margin: 0;
-
-    }
-
-
-
-    .feature-card__icon {
-
-      width: 3rem;
-
-      height: 3rem;
-
-      display: flex;
-
-      align-items: center;
-
-      justify-content: center;
-
-      border-radius: 14px;
-
-      font-size: 1.35rem;
-
-      background: color-mix(in srgb, var(--p-primary-500) 14%, transparent);
-
-      color: var(--p-primary-600);
-
-    }
-
-
-
-    .feature-card--gaming .feature-card__icon {
-
-      background: color-mix(in srgb, var(--p-purple-500) 14%, transparent);
-
-      color: var(--p-purple-600);
-
-    }
-
-
-
-    .feature-card--store .feature-card__icon {
-
-      background: color-mix(in srgb, var(--p-orange-500) 14%, transparent);
-
-      color: var(--p-orange-600);
-
-    }
+  color: var(--p-orange-600);
+}

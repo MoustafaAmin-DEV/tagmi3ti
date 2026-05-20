@@ -1,106 +1,118 @@
-    <p-dialog
-      [header]="'auth.title' | translate"
-      [visible]="auth.showLoginDialog()"
-      (visibleChange)="onVisibleChange($event)"
-      [modal]="true"
-      [style]="{ width: '90vw', maxWidth: '420px' }"
-      [draggable]="false"
-    >
-      <form class="flex flex-column gap-3" [formGroup]="authForm" (ngSubmit)="submit()">
-        <p-selectButton
-          [options]="modeOptions()"
-          [(ngModel)]="mode"
-          [ngModelOptions]="{ standalone: true }"
-          (ngModelChange)="onModeChange()"
-          optionLabel="label"
-          optionValue="value"
-          styleClass="w-full"
+<p-dialog
+  [header]="'auth.title' | translate"
+  [visible]="auth.showLoginDialog()"
+  (visibleChange)="onVisibleChange($event)"
+  [modal]="true"
+  [style]="{ width: '90vw', maxWidth: '420px' }"
+  [draggable]="false"
+>
+  <form class="flex flex-column gap-3" [formGroup]="authForm" (ngSubmit)="submit()">
+    <p-selectButton
+      [options]="modeOptions()"
+      [(ngModel)]="mode"
+      [ngModelOptions]="{ standalone: true }"
+      (ngModelChange)="onModeChange()"
+      optionLabel="label"
+      optionValue="value"
+      styleClass="w-full"
+    />
+
+    @if (mode === 'register') {
+      <div class="flex flex-column gap-2">
+        <label for="authDisplayName">{{ 'profile.displayName' | translate }} *</label>
+        <input
+          pInputText
+          id="authDisplayName"
+          formControlName="displayName"
+          class="w-full"
+          maxlength="80"
+          [class.p-invalid]="controlInvalid('displayName')"
+          autocomplete="name"
+          (blur)="authForm.get('displayName')?.markAsTouched()"
         />
+        <app-field-error [control]="authForm.get('displayName')" [submitted]="submitted()" />
+      </div>
+    }
 
-        @if (error()) {
-          <p-message severity="error" [text]="error()!" />
-        }
+    <div class="flex flex-column gap-2">
+      <label for="authEmail">{{ 'auth.email' | translate }} *</label>
+      <input
+        pInputText
+        id="authEmail"
+        type="email"
+        formControlName="email"
+        class="w-full"
+        maxlength="254"
+        [class.p-invalid]="controlInvalid('email')"
+        autocomplete="email"
+        (blur)="authForm.get('email')?.markAsTouched()"
+      />
+      <app-field-error [control]="authForm.get('email')" [submitted]="submitted()" />
+      @if (mode === 'register') {
+        <small class="text-color-secondary">{{ 'auth.emailHint' | translate }}</small>
+      }
+    </div>
 
-        @if (success()) {
-          <p-message severity="success" [text]="success()!" />
-        }
+    <div class="flex flex-column gap-2">
+      <label for="authPassword">{{ 'auth.password' | translate }} *</label>
+      <p-password
+        inputId="authPassword"
+        formControlName="password"
+        [feedback]="mode === 'register'"
+        [class.p-invalid]="controlInvalid('password')"
+        toggleMask
+        styleClass="w-full"
+        [inputStyleClass]="controlInvalid('password') ? 'w-full p-invalid' : 'w-full'"
+        [autocomplete]="mode === 'register' ? 'new-password' : 'current-password'"
+        (onBlur)="authForm.get('password')?.markAsTouched()"
+      />
+      <app-field-error [control]="authForm.get('password')" [submitted]="submitted()" />
+      @if (mode === 'register') {
+        <small class="text-color-secondary">{{ 'auth.passwordHint' | translate }}</small>
+      }
+    </div>
 
-        @if (mode === 'register') {
-          <div class="flex flex-column gap-2">
-            <label for="authDisplayName">{{ 'profile.displayName' | translate }} *</label>
-            <input
-              pInputText
-              id="authDisplayName"
-              formControlName="displayName"
-              class="w-full"
-              [class.p-invalid]="controlInvalid('displayName')"
-              autocomplete="name"
-            />
-            <app-field-error [control]="authForm.get('displayName')" [submitted]="submitted()" />
-          </div>
-        }
-
-        <div class="flex flex-column gap-2">
-          <label for="authEmail">{{ 'auth.email' | translate }}</label>
-          <input
-            pInputText
-            id="authEmail"
-            type="email"
-            formControlName="email"
-            class="w-full"
-            [class.p-invalid]="controlInvalid('email')"
-            autocomplete="email"
-          />
-          <app-field-error [control]="authForm.get('email')" [submitted]="submitted()" />
-        </div>
-
-        <div class="flex flex-column gap-2">
-          <label for="authPassword">{{ 'auth.password' | translate }}</label>
-          <p-password
-            inputId="authPassword"
-            formControlName="password"
-            [feedback]="mode === 'register'"
-            [class.p-invalid]="controlInvalid('password')"
-            toggleMask
-            styleClass="w-full"
-            [inputStyleClass]="controlInvalid('password') ? 'w-full p-invalid' : 'w-full'"
-            [autocomplete]="mode === 'register' ? 'new-password' : 'current-password'"
-          />
-          <app-field-error [control]="authForm.get('password')" [submitted]="submitted()" />
-        </div>
-
-        @if (mode === 'register') {
-          <div class="flex flex-column gap-2">
-            <label for="authPhone">{{ 'profile.phone' | translate }}</label>
-            <input
-              pInputText
-              id="authPhone"
-              formControlName="phone"
-              class="w-full"
-              [class.p-invalid]="controlInvalid('phone')"
-              autocomplete="tel"
-            />
-            <app-field-error [control]="authForm.get('phone')" [submitted]="submitted()" />
-          </div>
-          <div class="flex flex-column gap-2">
-            <label for="authCity">{{ 'profile.city' | translate }}</label>
-            <input
-              pInputText
-              id="authCity"
-              formControlName="city"
-              class="w-full"
-              autocomplete="address-level2"
-            />
-          </div>
-        }
-
-        <p-button
-          type="submit"
-          [label]="(mode === 'login' ? 'auth.submitLogin' : 'auth.submitRegister') | translate"
-          icon="pi pi-user"
-          [loading]="loading()"
-          styleClass="w-full"
+    @if (mode === 'register') {
+      <div class="flex flex-column gap-2">
+        <label for="authPhone">{{ 'profile.phone' | translate }}</label>
+        <input
+          pInputText
+          id="authPhone"
+          formControlName="phone"
+          type="tel"
+          inputmode="tel"
+          class="w-full"
+          maxlength="14"
+          [placeholder]="'validation.phonePlaceholder' | translate"
+          [class.p-invalid]="controlInvalid('phone')"
+          autocomplete="tel"
+          (blur)="authForm.get('phone')?.markAsTouched()"
         />
-      </form>
-    </p-dialog>
+        <app-field-error [control]="authForm.get('phone')" [submitted]="submitted()" />
+        <small class="text-color-secondary">{{ 'validation.phoneHint' | translate }}</small>
+      </div>
+      <div class="flex flex-column gap-2">
+        <label for="authCity">{{ 'profile.city' | translate }}</label>
+        <input
+          pInputText
+          id="authCity"
+          formControlName="city"
+          class="w-full"
+          maxlength="80"
+          [class.p-invalid]="controlInvalid('city')"
+          autocomplete="address-level2"
+          (blur)="authForm.get('city')?.markAsTouched()"
+        />
+        <app-field-error [control]="authForm.get('city')" [submitted]="submitted()" />
+      </div>
+    }
 
+    <p-button
+      type="submit"
+      [label]="(mode === 'login' ? 'auth.submitLogin' : 'auth.submitRegister') | translate"
+      icon="pi pi-user"
+      [loading]="loading()"
+      styleClass="w-full"
+    />
+  </form>
+</p-dialog>

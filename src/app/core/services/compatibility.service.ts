@@ -66,11 +66,7 @@ export class CompatibilityService {
     }
 
     if (cpu && cooler) {
-      if (
-        cpu.tdp_watts != null &&
-        cooler.tdp_watts != null &&
-        cooler.tdp_watts < cpu.tdp_watts
-      ) {
+      if (cpu.tdp_watts != null && cooler.tdp_watts != null && cooler.tdp_watts < cpu.tdp_watts) {
         issues.push({
           type: 'error',
           message: this.translate.instant('compat.coolerTdp', {

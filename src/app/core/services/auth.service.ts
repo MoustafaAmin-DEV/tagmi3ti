@@ -55,7 +55,8 @@ export class AuthService {
     return url;
   }
 
-  async signUp({ email, password, profile }: SignUpPayload): Promise<void> {
+  /** @returns true if email confirmation is required before sign-in */
+  async signUp({ email, password, profile }: SignUpPayload): Promise<boolean> {
     const { data, error } = await this.supabase.client.auth.signUp({
       email,
       password,
@@ -72,7 +73,9 @@ export class AuthService {
     }
     if (data.session?.user) {
       await this.profileService.upsertForUser(data.session.user.id, profile);
+      return false;
     }
+    return true;
   }
 
   async signIn(email: string, password: string): Promise<string | null> {

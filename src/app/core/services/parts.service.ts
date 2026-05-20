@@ -8,6 +8,9 @@ import { SupabaseService } from './supabase.service';
 import { sumStorePrices } from '../utils/part-price.util';
 import { LocaleService } from '../i18n/locale.service';
 
+/** Cache catalog in memory to avoid refetching on every route */
+const CATALOG_TTL_MS = 5 * 60 * 1000;
+
 @Injectable({ providedIn: 'root' })
 export class PartsService {
   private readonly supabase = inject(SupabaseService);
@@ -15,10 +18,14 @@ export class PartsService {
   private readonly translate = inject(TranslateService);
   private readonly locale = inject(LocaleService);
 
+  private catalogLoadedAt = 0;
+
   readonly parts = signal<Part[]>([]);
   readonly loading = signal(false);
   readonly loadError = signal<string | null>(null);
-  readonly catalogEmpty = computed(() => !this.loading() && !this.loadError() && this.parts().length === 0);
+  readonly catalogEmpty = computed(
+    () => !this.loading() && !this.loadError() && this.parts().length === 0,
+  );
   readonly selectedParts = signal<Partial<Record<PartType, Part>>>({});
   /** null = الكل، 'platform' = قطع المنصة فقط، uuid = متجر محدد */
   readonly storeFilter = signal<string | null>(null);
@@ -31,9 +38,7 @@ export class PartsService {
 
   readonly isCompatible = computed(() => {
     const issues = this.compatibilityIssues();
-    return (
-      !issues.some((i) => i.type === 'error') && Object.keys(this.selectedParts()).length > 0
-    );
+    return !issues.some((i) => i.type === 'error') && Object.keys(this.selectedParts()).length > 0;
   });
 
   readonly compatibilityScore = computed(() =>
@@ -53,7 +58,11 @@ export class PartsService {
 
   readonly selectionProgress = computed(() => {
     const count = this.selectionCount();
-    return { count, total: PART_TYPES.length, percent: Math.round((count / PART_TYPES.length) * 100) };
+    return {
+      count,
+      total: PART_TYPES.length,
+      percent: Math.round((count / PART_TYPES.length) * 100),
+    };
   });
 
   readonly storeFilterOptions = computed(() => {
@@ -98,17 +107,30 @@ export class PartsService {
     return match ?? null;
   }
 
-  async loadParts(): Promise<void> {
+  /** @param force bypass TTL cache and refetch from Supabase */
+  async loadParts(force = false): Promise<void> {
+    const cached =
+      !force &&
+      this.parts().length > 0 &&
+      !this.loadError() &&
+      Date.now() - this.catalogLoadedAt < CATALOG_TTL_MS;
+
+    if (cached) {
+      return;
+    }
+
     this.loading.set(true);
     this.loadError.set(null);
     try {
       const data = await this.supabase.getParts();
       this.parts.set(data);
+      this.catalogLoadedAt = Date.now();
       if (data.length === 0) {
         this.loadError.set(this.translate.instant('parts.emptyCatalog'));
       }
     } catch (e) {
       this.parts.set([]);
+      this.catalogLoadedAt = 0;
       this.loadError.set(
         e instanceof Error
           ? this.translate.instant('parts.loadFailed', { message: e.message })
@@ -117,6 +139,10 @@ export class PartsService {
     } finally {
       this.loading.set(false);
     }
+  }
+
+  invalidateCatalog(): void {
+    this.catalogLoadedAt = 0;
   }
 
   selectPart(type: PartType, part: Part | null): void {

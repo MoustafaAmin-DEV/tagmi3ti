@@ -1,18 +1,24 @@
 import { Component, computed, effect, inject, signal } from '@angular/core';
-import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { RxwebValidators } from '@rxweb/reactive-form-validators';
 import { Dialog } from 'primeng/dialog';
 import { InputText } from 'primeng/inputtext';
 import { Password } from 'primeng/password';
 import { Button } from 'primeng/button';
 import { SelectButton } from 'primeng/selectbutton';
-import { Message } from 'primeng/message';
+import { MessageService } from 'primeng/api';
 import { AuthService } from '../../../core/services/auth.service';
 import { LocaleService } from '../../../core/i18n/locale.service';
 import { showControlError } from '../../../core/i18n/form-control.util';
 import { optionalPhoneValidator } from '../../../core/i18n/rxweb-validators.util';
+import {
+  authDisplayNameValidator,
+  authPasswordValidator,
+  normalizeAuthEmail,
+  realEmailValidator,
+} from '../../../core/utils/email-policy.util';
+import { formatEgyptPhoneForStorage } from '../../../core/utils/phone-policy.util';
 import { FieldErrorComponent } from '../field-error/field-error.component';
 
 type AuthMode = 'login' | 'register';
@@ -31,7 +37,6 @@ type AuthField = 'email' | 'password' | 'displayName' | 'phone' | 'city';
     Password,
     Button,
     SelectButton,
-    Message,
     FieldErrorComponent,
   ],
   templateUrl: './auth-dialog.component.html',
@@ -42,6 +47,7 @@ export class AuthDialogComponent {
   private readonly fb = inject(FormBuilder);
   private readonly translate = inject(TranslateService);
   private readonly locale = inject(LocaleService);
+  private readonly messageService = inject(MessageService);
 
   mode: AuthMode = 'login';
 
@@ -54,23 +60,19 @@ export class AuthDialogComponent {
   });
 
   readonly authForm = this.fb.nonNullable.group({
-    email: ['', [RxwebValidators.required(), RxwebValidators.email()]],
-    password: ['', [RxwebValidators.required()]],
+    email: ['', [Validators.required, realEmailValidator()]],
+    password: ['', [Validators.required]],
     displayName: [''],
     phone: [''],
-    city: [''],
+    city: ['', [Validators.maxLength(80)]],
   });
 
   readonly loading = signal(false);
-  readonly error = signal<string | null>(null);
-  readonly success = signal<string | null>(null);
   readonly submitted = signal(false);
 
   constructor() {
     effect(() => {
       if (this.auth.showLoginDialog()) {
-        this.error.set(null);
-        this.success.set(null);
         this.submitted.set(false);
         this.authForm.reset({
           email: '',
@@ -100,8 +102,6 @@ export class AuthDialogComponent {
   }
 
   async submit(): Promise<void> {
-    this.error.set(null);
-    this.success.set(null);
     this.submitted.set(true);
     this.updateModeValidators();
     this.authForm.markAllAsTouched();
@@ -114,26 +114,31 @@ export class AuthDialogComponent {
     this.loading.set(true);
     try {
       if (this.mode === 'login') {
-        const returnUrl = await this.auth.signIn(raw.email.trim(), raw.password);
+        const returnUrl = await this.auth.signIn(normalizeAuthEmail(raw.email), raw.password);
+        this.toastSuccess(this.translate.instant('auth.successLogin'));
         if (returnUrl) {
           await this.router.navigateByUrl(returnUrl);
         }
       } else {
-        await this.auth.signUp({
-          email: raw.email.trim(),
+        const needsConfirmation = await this.auth.signUp({
+          email: normalizeAuthEmail(raw.email),
           password: raw.password,
           profile: {
             display_name: raw.displayName.trim(),
-            phone: raw.phone.trim() || null,
+            phone: formatEgyptPhoneForStorage(raw.phone),
             city: raw.city.trim() || null,
           },
         });
-        this.success.set(this.translate.instant('auth.successRegister'));
+        this.toastSuccess(
+          this.translate.instant(
+            needsConfirmation ? 'auth.successRegisterConfirm' : 'auth.successRegister',
+          ),
+        );
         this.mode = 'login';
         this.onModeChange();
       }
     } catch (e) {
-      this.error.set(this.formatError(e));
+      this.toastError(this.formatError(e));
     } finally {
       this.loading.set(false);
     }
@@ -145,17 +150,11 @@ export class AuthDialogComponent {
     const phone = this.authForm.get('phone');
 
     if (this.mode === 'register') {
-      password?.setValidators([
-        RxwebValidators.required(),
-        RxwebValidators.minLength({ value: 6 }),
-      ]);
-      displayName?.setValidators([
-        RxwebValidators.required(),
-        RxwebValidators.minLength({ value: 2 }),
-      ]);
+      password?.setValidators([Validators.required, authPasswordValidator()]);
+      displayName?.setValidators([authDisplayNameValidator()]);
       phone?.setValidators([optionalPhoneValidator()]);
     } else {
-      password?.setValidators([RxwebValidators.required()]);
+      password?.setValidators([Validators.required]);
       displayName?.clearValidators();
       phone?.clearValidators();
     }
@@ -166,9 +165,45 @@ export class AuthDialogComponent {
   }
 
   private formatError(e: unknown): string {
-    if (e && typeof e === 'object' && 'message' in e) {
-      return String((e as { message: string }).message);
+    const message =
+      e && typeof e === 'object' && 'message' in e
+        ? String((e as { message: string }).message)
+        : '';
+
+    if (/email not confirmed/i.test(message)) {
+      return this.translate.instant('auth.emailNotConfirmed');
+    }
+    if (/invalid login credentials/i.test(message)) {
+      return this.translate.instant('auth.invalidCredentials');
+    }
+    if (/user already registered/i.test(message)) {
+      return this.translate.instant('auth.emailAlreadyUsed');
+    }
+    if (/rate limit|too many requests/i.test(message)) {
+      return this.translate.instant('auth.rateLimited');
+    }
+
+    if (message) {
+      return message;
     }
     return this.translate.instant('auth.errorGeneric');
+  }
+
+  private toastSuccess(detail: string): void {
+    this.messageService.add({
+      severity: 'success',
+      summary: this.translate.instant('toast.success'),
+      detail,
+      life: 6000,
+    });
+  }
+
+  private toastError(detail: string): void {
+    this.messageService.add({
+      severity: 'error',
+      summary: this.translate.instant('toast.error'),
+      detail,
+      life: 6000,
+    });
   }
 }

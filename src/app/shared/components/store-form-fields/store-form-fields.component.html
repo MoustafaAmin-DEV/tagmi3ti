@@ -3,7 +3,11 @@
     <label>{{ 'store.logo' | translate }}</label>
     <div class="store-logo">
       @if (logoPreviewUrl()) {
-        <img class="store-logo__preview" [src]="logoPreviewUrl()!" [alt]="'store.logo' | translate" />
+        <img
+          class="store-logo__preview"
+          [src]="logoPreviewUrl()!"
+          [alt]="'store.logo' | translate"
+        />
       } @else {
         <span class="store-logo__placeholder" aria-hidden="true">
           <i class="pi pi-image"></i>
@@ -57,12 +61,15 @@
     <input
       pInputText
       formControlName="phone"
+      type="tel"
+      inputmode="tel"
       class="w-full"
+      maxlength="14"
       [class.p-invalid]="invalid('phone')"
-      [placeholder]="'store.phonePlaceholder' | translate"
+      [placeholder]="'validation.phonePlaceholder' | translate"
       autocomplete="tel"
     />
-    <span class="text-sm text-color-secondary">{{ 'store.phoneHint' | translate }}</span>
+    <span class="text-sm text-color-secondary">{{ 'validation.phoneHint' | translate }}</span>
     <app-field-error [control]="form().get('phone')" [submitted]="submitted()" />
   </div>
 
@@ -154,7 +161,12 @@
     <span class="text-sm text-color-secondary">{{ 'store.mapsUrlHint' | translate }}</span>
     <app-field-error [control]="form().get('maps_url')" [submitted]="submitted()" />
     @if (mapsHref(); as href) {
-      <a class="store-maps-link text-primary" [href]="href" target="_blank" rel="noopener noreferrer">
+      <a
+        class="store-maps-link text-primary"
+        [href]="href"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
         <i class="pi pi-map-marker"></i>
         {{ 'store.mapsPreview' | translate }}
       </a>

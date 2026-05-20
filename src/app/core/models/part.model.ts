@@ -1,11 +1,4 @@
-export type PartType =
-  | 'CPU'
-  | 'Motherboard'
-  | 'GPU'
-  | 'RAM'
-  | 'Case'
-  | 'PSU'
-  | 'Cooler';
+export type PartType = 'CPU' | 'Motherboard' | 'GPU' | 'RAM' | 'Case' | 'PSU' | 'Cooler';
 
 export interface Part {
   id: string;

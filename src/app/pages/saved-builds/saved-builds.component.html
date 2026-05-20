@@ -1,272 +1,274 @@
-    <app-page-header
-      [title]="'saved.title' | translate"
-      icon="pi-save"
-      [eyebrow]="'saved.eyebrow' | translate"
-      [description]="'saved.description' | translate"
-    />
+<app-page-header
+  [title]="'saved.title' | translate"
+  icon="pi-save"
+  [eyebrow]="'saved.eyebrow' | translate"
+  [description]="'saved.description' | translate"
+/>
 
-    <div class="grid page-split-grid">
-      <div class="col-12 lg:col-4">
-        <div class="page-aside-shell">
-          <aside class="page-aside surface-panel h-full p-3">
-            <div class="page-aside__hero">
-              <span class="page-aside__icon" aria-hidden="true">
-                <i class="pi pi-save"></i>
-              </span>
-              <h3 class="m-0">{{ 'saved.actionsTitle' | translate }}</h3>
-            </div>
-            <ul class="page-aside__list">
-              <li>
-                <i class="pi pi-copy"></i>
-                <span
-                  ><strong>{{ 'saved.actionCopy' | translate }}</strong>
-                  {{ 'saved.actionCopyDesc' | translate }}</span
-                >
-              </li>
-              <li>
-                <i class="pi pi-list"></i>
-                <span
-                  ><strong>{{ 'saved.actionShopping' | translate }}</strong>
-                  {{ 'saved.actionShoppingDesc' | translate }}</span
-                >
-              </li>
-              <li>
-                <i class="pi pi-share-alt"></i>
-                <span
-                  ><strong>{{ 'saved.actionShare' | translate }}</strong>
-                  {{ 'saved.actionShareDesc' | translate }}</span
-                >
-              </li>
-              <li>
-                <i class="pi pi-chevron-down"></i>
-                <span>{{ 'saved.actionExpand' | translate }}</span>
-              </li>
-            </ul>
-            <div class="page-aside__footer">
-              {{ 'saved.asidePrice' | translate }}
-            </div>
-          </aside>
+<div class="grid page-split-grid">
+  <div class="col-12 lg:col-4">
+    <div class="page-aside-shell">
+      <aside class="page-aside surface-panel h-full p-3">
+        <div class="page-aside__hero">
+          <span class="page-aside__icon" aria-hidden="true">
+            <i class="pi pi-save"></i>
+          </span>
+          <h3 class="m-0">{{ 'saved.actionsTitle' | translate }}</h3>
         </div>
-      </div>
-
-      <div class="col-12 lg:col-8">
-        <p-card styleClass="shadow-2 saved-builds-table-card">
-        <p-table [value]="builds()" [loading]="loading()" dataKey="id" styleClass="p-datatable-sm">
-          <ng-template #header>
-            <tr>
-              <th>{{ 'common.name' | translate }}</th>
-              <th>{{ 'common.date' | translate }}</th>
-              <th>{{ 'common.price' | translate }}</th>
-              <th>{{ 'common.compatibility' | translate }}</th>
-              <th style="width: 12rem">{{ 'common.actions' | translate }}</th>
-            </tr>
-          </ng-template>
-          <ng-template #body let-build>
-            <tr>
-              <td>{{ build.name }}</td>
-              <td>{{ build.created_at | date: 'short' }}</td>
-              <td>
-                @if (buildStoreTotal(build) > 0) {
-                  {{ buildStoreTotal(build) | number }} {{ 'common.currency' | translate }}
-                } @else {
-                  {{ 'common.dash' | translate }}
-                }
-              </td>
-              <td>
-                <app-compatibility-badge
-                  [compatible]="build.is_compatible"
-                  [hasSelection]="true"
-                  [score]="buildScore(build)"
-                />
-              </td>
-              <td>
-                <div class="flex gap-1 flex-wrap">
-                  <p-button
-                    icon="pi pi-share-alt"
-                    [text]="true"
-                    severity="info"
-                    (onClick)="openShareDialog(build)"
-                    [attr.aria-label]="'saved.share' | translate"
-                  />
-                  <p-button
-                    icon="pi pi-copy"
-                    [text]="true"
-                    (onClick)="copyToEditor(build)"
-                    [attr.aria-label]="'saved.copyEdit' | translate"
-                  />
-                  <p-button
-                    icon="pi pi-list"
-                    [text]="true"
-                    severity="help"
-                    (onClick)="openShoppingList(build)"
-                    [attr.aria-label]="'saved.shoppingList' | translate"
-                  />
-                  <p-button
-                    [icon]="expandedId() === build.id ? 'pi pi-chevron-up' : 'pi pi-chevron-down'"
-                    [text]="true"
-                    (onClick)="toggleExpand(build.id)"
-                    [attr.aria-label]="'saved.details' | translate"
-                  />
-                  <p-button
-                    icon="pi pi-trash"
-                    severity="danger"
-                    [text]="true"
-                    (onClick)="confirmDelete(build, $event)"
-                  />
-                </div>
-              </td>
-            </tr>
-            @if (expandedId() === build.id) {
-              <tr>
-                <td colspan="5" class="surface-ground">
-                  <ul class="list-none m-0 p-2">
-                    @for (type of partTypes; track type) {
-                      @if (build.parts[type]; as part) {
-                        <li class="py-1">
-                          <strong>{{ type | partTypeLabel }}:</strong> {{ part.name }}
-                          @if (part.store_id && (part.market_price_egp ?? part.user_price); as p) {
-                            — {{ p | number }} {{ 'common.currency' | translate }}
-                          }
-                        </li>
-                      }
-                    }
-                  </ul>
-                </td>
-              </tr>
-            }
-          </ng-template>
-          <ng-template #emptymessage>
-            <tr>
-              <td colspan="5">
-                <div class="empty-state">
-                  <i class="pi pi-inbox"></i>
-                  <p class="m-0 font-semibold">{{ 'saved.empty' | translate }}</p>
-                </div>
-              </td>
-            </tr>
-          </ng-template>
-        </p-table>
-      </p-card>
-      </div>
-    </div>
-
-    <p-dialog
-      [header]="'saved.shoppingTitle' | translate: { name: shoppingBuild()?.name ?? '' }"
-      [(visible)]="shoppingDialogVisible"
-      [modal]="true"
-      [style]="{ width: '95vw', maxWidth: '520px' }"
-    >
-      @if (shoppingItems().length > 0) {
-        <div class="flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
-          <p-button
-            [label]="'common.all' | translate"
-            [text]="true"
-            size="small"
-            (onClick)="selectAllShopping(true)"
-          />
-          <p-button
-            [label]="'common.none' | translate"
-            [text]="true"
-            size="small"
-            (onClick)="selectAllShopping(false)"
-          />
-        </div>
-        <ul class="list-none p-0 m-0 shopping-list">
-          @for (item of shoppingItems(); track item.type) {
-            <li class="shopping-list__row flex align-items-start gap-2 py-2 border-bottom-1 surface-border">
-              <p-checkbox
-                [binary]="true"
-                [ngModel]="shoppingChecked().has(item.type)"
-                (ngModelChange)="toggleShoppingItem(item.type, $event)"
-              />
-              <div class="flex-1">
-                <span class="font-semibold">{{ item.label }}</span>
-                <p class="m-0 text-sm">{{ item.name }}</p>
-                @if (item.storeName) {
-                  <span class="text-xs text-color-secondary">{{ item.storeName }}</span>
-                }
-                @if (item.price != null) {
-                  <span class="text-sm text-primary font-semibold block">
-                    {{ item.price | number }} {{ 'common.currency' | translate }}
-                  </span>
-                }
-              </div>
-              @if (item.storePhone) {
-                <p-button
-                  icon="pi pi-whatsapp"
-                  severity="success"
-                  [text]="true"
-                  (onClick)="whatsappItem(item)"
-                  [attr.aria-label]="'common.whatsappStore' | translate"
-                />
-              }
-            </li>
-          }
+        <ul class="page-aside__list">
+          <li>
+            <i class="pi pi-copy"></i>
+            <span
+              ><strong>{{ 'saved.actionCopy' | translate }}</strong>
+              {{ 'saved.actionCopyDesc' | translate }}</span
+            >
+          </li>
+          <li>
+            <i class="pi pi-list"></i>
+            <span
+              ><strong>{{ 'saved.actionShopping' | translate }}</strong>
+              {{ 'saved.actionShoppingDesc' | translate }}</span
+            >
+          </li>
+          <li>
+            <i class="pi pi-share-alt"></i>
+            <span
+              ><strong>{{ 'saved.actionShare' | translate }}</strong>
+              {{ 'saved.actionShareDesc' | translate }}</span
+            >
+          </li>
+          <li>
+            <i class="pi pi-chevron-down"></i>
+            <span>{{ 'saved.actionExpand' | translate }}</span>
+          </li>
         </ul>
-        <p class="font-bold mt-3 mb-3">
-          {{ 'common.selected' | translate }}: {{ shoppingSelectedTotal() | number }}
-          {{ 'common.currency' | translate }}
-        </p>
-        <div class="flex flex-wrap gap-2">
-          <p-button
-            [label]="'saved.copyClipboard' | translate"
-            icon="pi pi-copy"
-            (onClick)="copyShoppingList()"
-          />
-          <p-button
-            [label]="'common.print' | translate"
-            icon="pi pi-print"
-            [outlined]="true"
-            (onClick)="printShoppingList()"
-          />
+        <div class="page-aside__footer">
+          {{ 'saved.asidePrice' | translate }}
         </div>
-      }
-    </p-dialog>
+      </aside>
+    </div>
+  </div>
 
-    <p-dialog
-      [header]="'saved.shareTitle' | translate"
-      [(visible)]="shareDialogVisible"
-      [modal]="true"
-      [style]="{ width: '95vw', maxWidth: '480px' }"
-    >
-      @if (shareBuild(); as b) {
-        <p class="text-color-secondary text-sm mt-0">
-          {{ 'saved.shareHint' | translate }}
-        </p>
-        @if (shareUrl()) {
-          <div class="flex gap-2 mb-3">
-            <input pInputText [value]="shareUrl()!" readonly class="w-full flex-1" />
-            <p-button
-              icon="pi pi-copy"
-              (onClick)="copyShareLink()"
-              [attr.aria-label]="'saved.copyLink' | translate"
-            />
-          </div>
-          <div class="flex flex-wrap gap-2">
-            <p-button
-              [label]="'common.openLink' | translate"
-              icon="pi pi-external-link"
-              [outlined]="true"
-              (onClick)="openShareLink()"
-            />
-            <p-button
-              [label]="'saved.revokeShare' | translate"
-              icon="pi pi-times"
-              severity="danger"
-              [text]="true"
-              (onClick)="revokeShare()"
-              [loading]="shareLoading()"
-            />
-          </div>
-        } @else {
-          <p-button
-            [label]="'saved.createShareLink' | translate"
-            icon="pi pi-link"
-            (onClick)="createShareLink()"
-            [loading]="shareLoading()"
+  <div class="col-12 lg:col-8">
+    <p-card styleClass="shadow-2 saved-builds-table-card">
+      <p-table [value]="builds()" [loading]="loading()" dataKey="id" styleClass="p-datatable-sm">
+        <ng-template #header>
+          <tr>
+            <th>{{ 'common.name' | translate }}</th>
+            <th>{{ 'common.date' | translate }}</th>
+            <th>{{ 'common.price' | translate }}</th>
+            <th>{{ 'common.compatibility' | translate }}</th>
+            <th style="width: 12rem">{{ 'common.actions' | translate }}</th>
+          </tr>
+        </ng-template>
+        <ng-template #body let-build>
+          <tr>
+            <td>{{ build.name }}</td>
+            <td>{{ build.created_at | date: 'short' }}</td>
+            <td>
+              @if (buildStoreTotal(build) > 0) {
+                {{ buildStoreTotal(build) | number }} {{ 'common.currency' | translate }}
+              } @else {
+                {{ 'common.dash' | translate }}
+              }
+            </td>
+            <td>
+              <app-compatibility-badge
+                [compatible]="build.is_compatible"
+                [hasSelection]="true"
+                [score]="buildScore(build)"
+              />
+            </td>
+            <td>
+              <div class="flex gap-1 flex-wrap">
+                <p-button
+                  icon="pi pi-share-alt"
+                  [text]="true"
+                  severity="info"
+                  (onClick)="openShareDialog(build)"
+                  [attr.aria-label]="'saved.share' | translate"
+                />
+                <p-button
+                  icon="pi pi-copy"
+                  [text]="true"
+                  (onClick)="copyToEditor(build)"
+                  [attr.aria-label]="'saved.copyEdit' | translate"
+                />
+                <p-button
+                  icon="pi pi-list"
+                  [text]="true"
+                  severity="help"
+                  (onClick)="openShoppingList(build)"
+                  [attr.aria-label]="'saved.shoppingList' | translate"
+                />
+                <p-button
+                  [icon]="expandedId() === build.id ? 'pi pi-chevron-up' : 'pi pi-chevron-down'"
+                  [text]="true"
+                  (onClick)="toggleExpand(build.id)"
+                  [attr.aria-label]="'saved.details' | translate"
+                />
+                <p-button
+                  icon="pi pi-trash"
+                  severity="danger"
+                  [text]="true"
+                  (onClick)="confirmDelete(build, $event)"
+                />
+              </div>
+            </td>
+          </tr>
+          @if (expandedId() === build.id) {
+            <tr>
+              <td colspan="5" class="surface-ground">
+                <ul class="list-none m-0 p-2">
+                  @for (type of partTypes; track type) {
+                    @if (build.parts[type]; as part) {
+                      <li class="py-1">
+                        <strong>{{ type | partTypeLabel }}:</strong> {{ part.name }}
+                        @if (part.store_id && (part.market_price_egp ?? part.user_price); as p) {
+                          — {{ p | number }} {{ 'common.currency' | translate }}
+                        }
+                      </li>
+                    }
+                  }
+                </ul>
+              </td>
+            </tr>
+          }
+        </ng-template>
+        <ng-template #emptymessage>
+          <tr>
+            <td colspan="5">
+              <div class="empty-state">
+                <i class="pi pi-inbox"></i>
+                <p class="m-0 font-semibold">{{ 'saved.empty' | translate }}</p>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </p-card>
+  </div>
+</div>
+
+<p-dialog
+  [header]="'saved.shoppingTitle' | translate: { name: shoppingBuild()?.name ?? '' }"
+  [(visible)]="shoppingDialogVisible"
+  [modal]="true"
+  [style]="{ width: '95vw', maxWidth: '520px' }"
+>
+  @if (shoppingItems().length > 0) {
+    <div class="flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+      <p-button
+        [label]="'common.all' | translate"
+        [text]="true"
+        size="small"
+        (onClick)="selectAllShopping(true)"
+      />
+      <p-button
+        [label]="'common.none' | translate"
+        [text]="true"
+        size="small"
+        (onClick)="selectAllShopping(false)"
+      />
+    </div>
+    <ul class="list-none p-0 m-0 shopping-list">
+      @for (item of shoppingItems(); track item.type) {
+        <li
+          class="shopping-list__row flex align-items-start gap-2 py-2 border-bottom-1 surface-border"
+        >
+          <p-checkbox
+            [binary]="true"
+            [ngModel]="shoppingChecked().has(item.type)"
+            (ngModelChange)="toggleShoppingItem(item.type, $event)"
           />
-        }
+          <div class="flex-1">
+            <span class="font-semibold">{{ item.label }}</span>
+            <p class="m-0 text-sm">{{ item.name }}</p>
+            @if (item.storeName) {
+              <span class="text-xs text-color-secondary">{{ item.storeName }}</span>
+            }
+            @if (item.price != null) {
+              <span class="text-sm text-primary font-semibold block">
+                {{ item.price | number }} {{ 'common.currency' | translate }}
+              </span>
+            }
+          </div>
+          @if (item.storePhone) {
+            <p-button
+              icon="pi pi-whatsapp"
+              severity="success"
+              [text]="true"
+              (onClick)="whatsappItem(item)"
+              [attr.aria-label]="'common.whatsappStore' | translate"
+            />
+          }
+        </li>
       }
-    </p-dialog>
+    </ul>
+    <p class="font-bold mt-3 mb-3">
+      {{ 'common.selected' | translate }}: {{ shoppingSelectedTotal() | number }}
+      {{ 'common.currency' | translate }}
+    </p>
+    <div class="flex flex-wrap gap-2">
+      <p-button
+        [label]="'saved.copyClipboard' | translate"
+        icon="pi pi-copy"
+        (onClick)="copyShoppingList()"
+      />
+      <p-button
+        [label]="'common.print' | translate"
+        icon="pi pi-print"
+        [outlined]="true"
+        (onClick)="printShoppingList()"
+      />
+    </div>
+  }
+</p-dialog>
 
-    <p-confirmDialog />
+<p-dialog
+  [header]="'saved.shareTitle' | translate"
+  [(visible)]="shareDialogVisible"
+  [modal]="true"
+  [style]="{ width: '95vw', maxWidth: '480px' }"
+>
+  @if (shareBuild(); as b) {
+    <p class="text-color-secondary text-sm mt-0">
+      {{ 'saved.shareHint' | translate }}
+    </p>
+    @if (shareUrl()) {
+      <div class="flex gap-2 mb-3">
+        <input pInputText [value]="shareUrl()!" readonly class="w-full flex-1" />
+        <p-button
+          icon="pi pi-copy"
+          (onClick)="copyShareLink()"
+          [attr.aria-label]="'saved.copyLink' | translate"
+        />
+      </div>
+      <div class="flex flex-wrap gap-2">
+        <p-button
+          [label]="'common.openLink' | translate"
+          icon="pi pi-external-link"
+          [outlined]="true"
+          (onClick)="openShareLink()"
+        />
+        <p-button
+          [label]="'saved.revokeShare' | translate"
+          icon="pi pi-times"
+          severity="danger"
+          [text]="true"
+          (onClick)="revokeShare()"
+          [loading]="shareLoading()"
+        />
+      </div>
+    } @else {
+      <p-button
+        [label]="'saved.createShareLink' | translate"
+        icon="pi pi-link"
+        (onClick)="createShareLink()"
+        [loading]="shareLoading()"
+      />
+    }
+  }
+</p-dialog>
+
+<p-confirmDialog />

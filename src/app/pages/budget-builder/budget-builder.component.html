@@ -1,44 +1,43 @@
-    <app-page-header
-      [title]="'budget.title' | translate"
-      icon="pi-wrench"
-      [eyebrow]="'budget.eyebrow' | translate"
-      [description]="'budget.description' | translate"
-    />
+<app-page-header
+  [title]="'budget.title' | translate"
+  icon="pi-wrench"
+  [eyebrow]="'budget.eyebrow' | translate"
+  [description]="'budget.description' | translate"
+/>
 
-    <div class="grid page-split-grid align-items-start">
-      <div class="col-12 lg:col-4 page-mobile-aside-first">
-        <div class="page-aside-shell">
-          <aside class="page-aside budget-builder__aside h-full flex flex-column gap-4">
-            <app-build-progress-banner class="flex-shrink-0" />
-            <div class="flex flex-column gap-3 flex-grow-1">
-              <div class="page-aside__hero">
-                <span class="page-aside__icon" aria-hidden="true">
-                  <i class="pi pi-wrench"></i>
-                </span>
-                <h3 class="m-0">{{ 'budget.tipsTitle' | translate }}</h3>
-              </div>
-              <ul class="page-aside__list">
-                <li>
-                  <i class="pi pi-bolt"></i>
-                  <span>{{ 'budget.tip1' | translate }}</span>
-                </li>
-                <li>
-                  <i class="pi pi-percentage"></i>
-                  <span>{{ 'budget.tip2' | translate }}</span>
-                </li>
-                <li>
-                  <i class="pi pi-wallet"></i>
-                  <span>{{ 'budget.tip3' | translate }}</span>
-                </li>
-              </ul>
-            </div>
-          </aside>
+<div class="grid page-split-grid align-items-start">
+  <div class="col-12 lg:col-4 page-mobile-aside-first">
+    <div class="page-aside-shell">
+      <aside class="page-aside budget-builder__aside h-full flex flex-column gap-4">
+        <app-build-progress-banner class="flex-shrink-0" />
+        <div class="flex flex-column gap-3 flex-grow-1">
+          <div class="page-aside__hero">
+            <span class="page-aside__icon" aria-hidden="true">
+              <i class="pi pi-wrench"></i>
+            </span>
+            <h3 class="m-0">{{ 'budget.tipsTitle' | translate }}</h3>
+          </div>
+          <ul class="page-aside__list">
+            <li>
+              <i class="pi pi-bolt"></i>
+              <span>{{ 'budget.tip1' | translate }}</span>
+            </li>
+            <li>
+              <i class="pi pi-percentage"></i>
+              <span>{{ 'budget.tip2' | translate }}</span>
+            </li>
+            <li>
+              <i class="pi pi-wallet"></i>
+              <span>{{ 'budget.tip3' | translate }}</span>
+            </li>
+          </ul>
         </div>
-      </div>
-      <div class="col-12 lg:col-8">
-        <div class="budget-builder__main-panel">
-          <app-build-editor [showSummary]="true" [hideProgressPanel]="true" />
-        </div>
-      </div>
+      </aside>
     </div>
-
+  </div>
+  <div class="col-12 lg:col-8">
+    <div class="budget-builder__main-panel">
+      <app-build-editor [showSummary]="true" [hideProgressPanel]="true" />
+    </div>
+  </div>
+</div>

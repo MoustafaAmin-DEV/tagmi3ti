@@ -33,7 +33,14 @@ describe('shopping-list.util', () => {
     const text = formatShoppingListText(
       'تجميعتي',
       [
-        { type: 'CPU', label: 'المعالج', name: 'Ryzen', price: 1000, storeName: null, storePhone: null },
+        {
+          type: 'CPU',
+          label: 'المعالج',
+          name: 'Ryzen',
+          price: 1000,
+          storeName: null,
+          storePhone: null,
+        },
         { type: 'GPU', label: 'كارت', name: 'RTX', price: 2000, storeName: null, storePhone: null },
       ],
       new Set(['CPU']),

@@ -1,134 +1,92 @@
-
-    <section class="hero">
-
-      <div class="hero__inner page-container text-center">
-
-        <img class="hero__logo" src="/logo.svg" width="80" height="80" alt="" decoding="async" />
-
-        <span class="hero__badge">
-
-          <i class="pi pi-bolt"></i>
-
-          {{ 'home.badge' | translate }}
-
-        </span>
-
-        <h1 class="hero__title">{{ 'home.title' | translate }}</h1>
-
-        <p class="hero__subtitle">
-
-          {{ 'home.subtitle' | translate }}
-
-        </p>
-
-        <div class="hero__actions flex flex-wrap justify-content-center gap-2">
-
-          <p-button [label]="'home.ctaChecker' | translate" icon="pi pi-check-circle" routerLink="/checker" />
-
-          <p-button
-
-            [label]="'home.ctaAi' | translate"
-
-            icon="pi pi-sparkles"
-
-            routerLink="/ai"
-
-            [outlined]="true"
-
-            severity="secondary"
-
-          />
-
-        </div>
-
-        <div class="hero__stats flex flex-wrap justify-content-center gap-4 mt-5">
-
-          <div class="hero__stat">
-
-            <span class="hero__stat-value">7</span>
-
-            <span class="hero__stat-label">{{ 'home.statCategories' | translate }}</span>
-
-          </div>
-
-          <div class="hero__stat">
-
-            <span class="hero__stat-value">100%</span>
-
-            <span class="hero__stat-label">{{ 'home.statCompat' | translate }}</span>
-
-          </div>
-
-          <div class="hero__stat">
-
-            <span class="hero__stat-value">RTL</span>
-
-            <span class="hero__stat-label">{{ 'home.statRtl' | translate }}</span>
-
-          </div>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-
-    <div class="page-container page-shell pt-0">
-
-      <div class="home-inline-strip mb-4">
-
-        <span><i class="pi pi-check-circle"></i> {{ 'home.stripCompat' | translate }}</span>
-
-        <span><i class="pi pi-eye"></i> {{ 'home.stripRtl' | translate }}</span>
-
-        <span><i class="pi pi-shop"></i> {{ 'home.stripPrices' | translate }}</span>
-
-      </div>
-
-      <h2 class="section-title text-center mb-4">{{ 'home.featuresTitle' | translate }}</h2>
-
-      <div class="grid">
-
-        @for (feature of features; track feature.route) {
-
-          <div class="col-12 md:col-6 lg:col-4">
-
-            <p-card styleClass="h-full feature-card" [ngClass]="'feature-card--' + feature.accent">
-
-              <div class="flex flex-column gap-3 h-full">
-
-                <span class="feature-card__icon" [attr.data-accent]="feature.accent">
-
-                  <i [class]="'pi ' + feature.icon"></i>
-
-                </span>
-
-                <h3 class="m-0 font-bold text-lg">{{ feature.titleKey | translate }}</h3>
-
-                <p class="text-color-secondary m-0 line-height-3 flex-1">{{ feature.descKey | translate }}</p>
-
-                <p-button
-
-                  [label]="'common.go' | translate"
-
-                  [routerLink]="feature.route"
-
-                  icon="pi pi-arrow-left"
-
-                  styleClass="w-full"
-
-                />
-
-              </div>
-
-            </p-card>
-
-          </div>
-
-        }
-
-      </div>
-
+<section class="hero">
+  <div class="hero__inner page-container text-center">
+    <img class="hero__logo" src="/logo.svg" width="80" height="80" alt="" decoding="async" />
+
+    <span class="hero__badge">
+      <i class="pi pi-bolt"></i>
+
+      {{ 'home.badge' | translate }}
+    </span>
+
+    <h1 class="hero__title">{{ 'home.title' | translate }}</h1>
+
+    <p class="hero__subtitle">
+      {{ 'home.subtitle' | translate }}
+    </p>
+
+    <div class="hero__actions flex flex-wrap justify-content-center gap-2">
+      <p-button
+        [label]="'home.ctaChecker' | translate"
+        icon="pi pi-check-circle"
+        routerLink="/checker"
+      />
+
+      <p-button
+        [label]="'home.ctaAi' | translate"
+        icon="pi pi-sparkles"
+        routerLink="/ai"
+        [outlined]="true"
+        severity="secondary"
+      />
     </div>
+
+    <div class="hero__stats flex flex-wrap justify-content-center gap-4 mt-5">
+      <div class="hero__stat">
+        <span class="hero__stat-value">7</span>
+
+        <span class="hero__stat-label">{{ 'home.statCategories' | translate }}</span>
+      </div>
+
+      <div class="hero__stat">
+        <span class="hero__stat-value">100%</span>
+
+        <span class="hero__stat-label">{{ 'home.statCompat' | translate }}</span>
+      </div>
+
+      <div class="hero__stat">
+        <span class="hero__stat-value">RTL</span>
+
+        <span class="hero__stat-label">{{ 'home.statRtl' | translate }}</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="page-container page-shell pt-0">
+  <div class="home-inline-strip mb-4">
+    <span><i class="pi pi-check-circle"></i> {{ 'home.stripCompat' | translate }}</span>
+
+    <span><i class="pi pi-eye"></i> {{ 'home.stripRtl' | translate }}</span>
+
+    <span><i class="pi pi-shop"></i> {{ 'home.stripPrices' | translate }}</span>
+  </div>
+
+  <h2 class="section-title text-center mb-4">{{ 'home.featuresTitle' | translate }}</h2>
+
+  <div class="grid">
+    @for (feature of features; track feature.route) {
+      <div class="col-12 md:col-6 lg:col-4">
+        <p-card styleClass="h-full feature-card" [ngClass]="'feature-card--' + feature.accent">
+          <div class="flex flex-column gap-3 h-full">
+            <span class="feature-card__icon" [attr.data-accent]="feature.accent">
+              <i [class]="'pi ' + feature.icon"></i>
+            </span>
+
+            <h3 class="m-0 font-bold text-lg">{{ feature.titleKey | translate }}</h3>
+
+            <p class="text-color-secondary m-0 line-height-3 flex-1">
+              {{ feature.descKey | translate }}
+            </p>
+
+            <p-button
+              [label]="'common.go' | translate"
+              [routerLink]="feature.route"
+              icon="pi pi-arrow-left"
+              styleClass="w-full"
+            />
+          </div>
+        </p-card>
+      </div>
+    }
+  </div>
+</div>

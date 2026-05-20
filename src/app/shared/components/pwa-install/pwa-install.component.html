@@ -1,27 +1,27 @@
-    @if (visible()) {
-      <div class="pwa-banner surface-panel">
-        <div class="flex align-items-center gap-3 flex-wrap">
-          <i class="pi pi-mobile text-2xl text-primary"></i>
-          <div class="flex-1 min-w-0">
-            <p class="m-0 font-semibold">{{ 'pwa.title' | translate }}</p>
-            <p class="m-0 text-sm text-color-secondary">{{ 'pwa.subtitle' | translate }}</p>
-          </div>
-          <div class="flex gap-2">
-            <p-button
-              [label]="'pwa.install' | translate"
-              icon="pi pi-download"
-              size="small"
-              (onClick)="install()"
-            />
-            <p-button
-              icon="pi pi-times"
-              [text]="true"
-              severity="secondary"
-              size="small"
-              (onClick)="dismiss()"
-              [attr.aria-label]="'common.close' | translate"
-            />
-          </div>
-        </div>
+@if (visible()) {
+  <div class="pwa-banner surface-panel">
+    <div class="flex align-items-center gap-3 flex-wrap">
+      <i class="pi pi-mobile text-2xl text-primary"></i>
+      <div class="flex-1 min-w-0">
+        <p class="m-0 font-semibold">{{ 'pwa.title' | translate }}</p>
+        <p class="m-0 text-sm text-color-secondary">{{ 'pwa.subtitle' | translate }}</p>
       </div>
-    }
+      <div class="flex gap-2">
+        <p-button
+          [label]="'pwa.install' | translate"
+          icon="pi pi-download"
+          size="small"
+          (onClick)="install()"
+        />
+        <p-button
+          icon="pi pi-times"
+          [text]="true"
+          severity="secondary"
+          size="small"
+          (onClick)="dismiss()"
+          [attr.aria-label]="'common.close' | translate"
+        />
+      </div>
+    </div>
+  </div>
+}

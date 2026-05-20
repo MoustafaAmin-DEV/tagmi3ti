@@ -207,7 +207,7 @@ a.no-underline {
 
 /* —— Split layout + aside (صفحات البناء والمقارنة ولوحة المتجر) —— */
 .page-split-grid {
-  align-items: stretch;
+  align-items: flex-start;
 }
 
 .page-mobile-aside-first {
@@ -232,7 +232,6 @@ a.no-underline {
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
-  min-height: 100%;
   background: linear-gradient(
     160deg,
     color-mix(in srgb, var(--p-primary-500) 10%, var(--p-content-background)),
@@ -301,7 +300,6 @@ a.no-underline {
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  height: 100%;
 }
 
 .page-tool-form-panel__title {
@@ -320,7 +318,6 @@ a.no-underline {
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
-  height: 100%;
 }
 
 .page-tool-form__title {

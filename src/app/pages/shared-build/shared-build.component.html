@@ -1,100 +1,105 @@
-      @if (loading()) {
-        <p class="text-center text-color-secondary py-6">{{ 'shared.loading' | translate }}</p>
-      } @else if (error()) {
-        <div class="empty-state surface-panel">
-          <i class="pi pi-link"></i>
-          <p class="font-semibold m-0">{{ error() }}</p>
-          <p-button class="mt-3" [label]="'nav.home' | translate" icon="pi pi-home" routerLink="/" />
-        </div>
-      } @else if (build(); as b) {
-        <div class="grid page-split-grid">
-          <div class="col-12 lg:col-4">
-            <div class="page-aside-shell">
-              <aside class="page-aside surface-panel h-full p-3">
-                <div class="page-aside__hero">
-                  <span class="page-aside__icon" aria-hidden="true">
-                    <i class="pi pi-link"></i>
-                  </span>
-                  <h3 class="m-0">{{ 'shared.readOnlyTitle' | translate }}</h3>
-                </div>
-                <ul class="page-aside__list">
-                  <li>
-                    <i class="pi pi-eye"></i>
-                    <span>{{ 'shared.readOnly1' | translate }}</span>
-                  </li>
-                  <li>
-                    <i class="pi pi-wallet"></i>
-                    <span>{{ 'shared.readOnly2' | translate }}</span>
-                  </li>
-                </ul>
-                <div class="page-aside__footer">
-                  {{ 'shared.readOnlyFooter' | translate }}
-                </div>
-              </aside>
-            </div>
+@if (loading()) {
+  <p class="text-center text-color-secondary py-6">{{ 'shared.loading' | translate }}</p>
+} @else if (error()) {
+  <div class="empty-state surface-panel">
+    <i class="pi pi-link"></i>
+    <p class="font-semibold m-0">{{ error() }}</p>
+    <p-button class="mt-3" [label]="'nav.home' | translate" icon="pi pi-home" routerLink="/" />
+  </div>
+} @else if (build(); as b) {
+  <div class="grid page-split-grid">
+    <div class="col-12 lg:col-4">
+      <div class="page-aside-shell">
+        <aside class="page-aside surface-panel h-full p-3">
+          <div class="page-aside__hero">
+            <span class="page-aside__icon" aria-hidden="true">
+              <i class="pi pi-link"></i>
+            </span>
+            <h3 class="m-0">{{ 'shared.readOnlyTitle' | translate }}</h3>
           </div>
-          <div class="col-12 lg:col-8">
-            <p-card styleClass="mb-3">
-          <div class="flex flex-column md:flex-row justify-content-between align-items-start gap-3 mb-3">
-            <div>
-              <span class="page-eyebrow">{{ 'shared.sharedBuild' | translate }}</span>
-              <h1 class="page-title m-0">{{ b.name }}</h1>
-              @if (b.created_at) {
-                <p class="text-sm text-color-secondary m-0 mt-2">
-                  {{ b.created_at | date: 'medium' }}
-                </p>
-              }
-            </div>
-            <app-compatibility-badge
-              [compatible]="b.is_compatible"
-              [hasSelection]="true"
-              [score]="compatScore()"
-            />
-          </div>
-
-          @if (storeTotal() > 0) {
-            <p class="text-2xl font-bold text-primary mb-4">
-              {{ storeTotal() | number }} <span class="text-lg">{{ 'common.currency' | translate }}</span>
-              <span class="text-sm text-color-secondary font-normal block mt-1">{{
-                'shared.storeTotalLabel' | translate
-              }}</span>
-            </p>
-          }
-
-          @if (b.use_case) {
-            <p-message
-              severity="info"
-              [text]="('shared.useCase' | translate) + b.use_case"
-              styleClass="mb-3 w-full"
-            />
-          }
-
-          <ul class="page-parts-rows">
-            @for (type of partTypes; track type) {
-              @if (b.parts[type]; as part) {
-                <li class="page-parts-rows__item">
-                  <div>
-                    <span class="page-parts-rows__type">{{ type | partTypeLabel }}</span>
-                    <p class="m-0 text-sm">{{ part.name }}</p>
-                    @if (part.store_name) {
-                      <span class="text-xs text-color-secondary">{{ part.store_name }}</span>
-                    }
-                  </div>
-                  @if (partPrice(part); as price) {
-                    <span class="text-primary font-semibold"
-                      >{{ price | number }} {{ 'common.currency' | translate }}</span
-                    >
-                  }
-                </li>
-              }
-            }
+          <ul class="page-aside__list">
+            <li>
+              <i class="pi pi-eye"></i>
+              <span>{{ 'shared.readOnly1' | translate }}</span>
+            </li>
+            <li>
+              <i class="pi pi-wallet"></i>
+              <span>{{ 'shared.readOnly2' | translate }}</span>
+            </li>
           </ul>
-        </p-card>
+          <div class="page-aside__footer">
+            {{ 'shared.readOnlyFooter' | translate }}
           </div>
+        </aside>
+      </div>
+    </div>
+    <div class="col-12 lg:col-8">
+      <p-card styleClass="mb-3">
+        <div
+          class="flex flex-column md:flex-row justify-content-between align-items-start gap-3 mb-3"
+        >
+          <div>
+            <span class="page-eyebrow">{{ 'shared.sharedBuild' | translate }}</span>
+            <h1 class="page-title m-0">{{ b.name }}</h1>
+            @if (b.created_at) {
+              <p class="text-sm text-color-secondary m-0 mt-2">
+                {{ b.created_at | date: 'medium' }}
+              </p>
+            }
+          </div>
+          <app-compatibility-badge
+            [compatible]="b.is_compatible"
+            [hasSelection]="true"
+            [score]="compatScore()"
+          />
         </div>
 
-        <p class="text-center text-color-secondary text-sm">
-          {{ 'shared.createOn' | translate }}
-          <a routerLink="/" class="text-primary font-semibold no-underline">{{ 'app.name' | translate }}</a>
-        </p>
-      }
+        @if (storeTotal() > 0) {
+          <p class="text-2xl font-bold text-primary mb-4">
+            {{ storeTotal() | number }}
+            <span class="text-lg">{{ 'common.currency' | translate }}</span>
+            <span class="text-sm text-color-secondary font-normal block mt-1">{{
+              'shared.storeTotalLabel' | translate
+            }}</span>
+          </p>
+        }
+
+        @if (b.use_case) {
+          <p-message
+            severity="info"
+            [text]="('shared.useCase' | translate) + b.use_case"
+            styleClass="mb-3 w-full"
+          />
+        }
+
+        <ul class="page-parts-rows">
+          @for (type of partTypes; track type) {
+            @if (b.parts[type]; as part) {
+              <li class="page-parts-rows__item">
+                <div>
+                  <span class="page-parts-rows__type">{{ type | partTypeLabel }}</span>
+                  <p class="m-0 text-sm">{{ part.name }}</p>
+                  @if (part.store_name) {
+                    <span class="text-xs text-color-secondary">{{ part.store_name }}</span>
+                  }
+                </div>
+                @if (partPrice(part); as price) {
+                  <span class="text-primary font-semibold"
+                    >{{ price | number }} {{ 'common.currency' | translate }}</span
+                  >
+                }
+              </li>
+            }
+          }
+        </ul>
+      </p-card>
+    </div>
+  </div>
+
+  <p class="text-center text-color-secondary text-sm">
+    {{ 'shared.createOn' | translate }}
+    <a routerLink="/" class="text-primary font-semibold no-underline">{{
+      'app.name' | translate
+    }}</a>
+  </p>
+}

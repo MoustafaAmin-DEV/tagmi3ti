@@ -128,10 +128,7 @@ export class BuildEditorComponent {
     if (!part?.store_phone) {
       return;
     }
-    const url = buildWhatsAppUrl(
-      part.store_phone,
-      partInquiryMessage(part.name, part.store_name),
-    );
+    const url = buildWhatsAppUrl(part.store_phone, partInquiryMessage(part.name, part.store_name));
     window.open(url, '_blank');
   }
 

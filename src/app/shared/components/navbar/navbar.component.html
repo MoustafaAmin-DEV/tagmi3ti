@@ -76,7 +76,10 @@
 </header>
 
 @if (mobileOpen) {
-  <nav class="mobile-nav lg:hidden flex flex-column gap-1 p-3" [attr.aria-label]="'nav.mobile' | translate">
+  <nav
+    class="mobile-nav lg:hidden flex flex-column gap-1 p-3"
+    [attr.aria-label]="'nav.mobile' | translate"
+  >
     @for (item of menuItems; track item.routerLink) {
       <a
         [routerLink]="item.routerLink"

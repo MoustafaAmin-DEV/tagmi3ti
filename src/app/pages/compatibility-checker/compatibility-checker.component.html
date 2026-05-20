@@ -1,41 +1,41 @@
-    <app-page-header
-      [title]="'checker.title' | translate"
-      icon="pi-check-circle"
-      [eyebrow]="'checker.eyebrow' | translate"
-      [description]="'checker.description' | translate"
-    />
+<app-page-header
+  [title]="'checker.title' | translate"
+  icon="pi-check-circle"
+  [eyebrow]="'checker.eyebrow' | translate"
+  [description]="'checker.description' | translate"
+/>
 
-    <div class="grid page-split-grid">
-      <div class="col-12 lg:col-5">
-        <div class="page-aside-shell">
-          <aside class="page-aside surface-panel h-full p-3">
-            <div class="page-aside__hero">
-              <span class="page-aside__icon" aria-hidden="true">
-                <i class="pi pi-check-circle"></i>
-              </span>
-              <h3 class="m-0">{{ 'checker.guideTitle' | translate }}</h3>
-            </div>
-            <ul class="page-aside__list">
-              <li>
-                <i class="pi pi-th-large"></i>
-                <span>{{ 'checker.guide1' | translate }}</span>
-              </li>
-              <li>
-                <i class="pi pi-shop"></i>
-                <span>{{ 'checker.guide2' | translate }}</span>
-              </li>
-              <li>
-                <i class="pi pi-comments"></i>
-                <span>{{ 'checker.guide3' | translate }}</span>
-              </li>
-            </ul>
-            <div class="page-aside__footer">
-              {{ 'checker.guideFooter' | translate }}
-            </div>
-          </aside>
+<div class="grid page-split-grid">
+  <div class="col-12 lg:col-5">
+    <div class="page-aside-shell">
+      <aside class="page-aside surface-panel p-3">
+        <div class="page-aside__hero">
+          <span class="page-aside__icon" aria-hidden="true">
+            <i class="pi pi-check-circle"></i>
+          </span>
+          <h3 class="m-0">{{ 'checker.guideTitle' | translate }}</h3>
         </div>
-      </div>
-      <div class="col-12 lg:col-7">
-        <app-build-editor />
-      </div>
+        <ul class="page-aside__list">
+          <li>
+            <i class="pi pi-th-large"></i>
+            <span>{{ 'checker.guide1' | translate }}</span>
+          </li>
+          <li>
+            <i class="pi pi-shop"></i>
+            <span>{{ 'checker.guide2' | translate }}</span>
+          </li>
+          <li>
+            <i class="pi pi-comments"></i>
+            <span>{{ 'checker.guide3' | translate }}</span>
+          </li>
+        </ul>
+        <div class="page-aside__footer">
+          {{ 'checker.guideFooter' | translate }}
+        </div>
+      </aside>
     </div>
+  </div>
+  <div class="col-12 lg:col-7">
+    <app-build-editor />
+  </div>
+</div>

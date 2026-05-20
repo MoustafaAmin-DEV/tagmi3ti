@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { Part } from '../models/part.model';
 import { PartInput, Store, StoreInput } from '../models/store.model';
+import { SPREADSHEET_MAX_DATA_ROWS } from '../utils/part-csv-import.util';
 import { cleanStoreInput } from '../utils/store-input.util';
 import { storeLogoExtension } from '../utils/store-logo.util';
 import { SupabaseService } from './supabase.service';
@@ -52,10 +53,12 @@ export class StoreService {
   }
 
   async updateStore(storeId: string, input: StoreInput): Promise<Store> {
+    const userId = this.auth.requireUserId();
     const { data, error } = await this.supabase.client
       .from('stores')
       .update(cleanStoreInput(input))
       .eq('id', storeId)
+      .eq('owner_id', userId)
       .select()
       .single();
     if (error) {
@@ -65,7 +68,12 @@ export class StoreService {
   }
 
   async deleteStore(storeId: string): Promise<void> {
-    const { error } = await this.supabase.client.from('stores').delete().eq('id', storeId);
+    const userId = this.auth.requireUserId();
+    const { error } = await this.supabase.client
+      .from('stores')
+      .delete()
+      .eq('id', storeId)
+      .eq('owner_id', userId);
     if (error) {
       throw error;
     }
@@ -92,12 +100,13 @@ export class StoreService {
     return data as Part;
   }
 
-  async updatePart(partId: string, input: PartInput): Promise<Part> {
+  async updatePart(storeId: string, partId: string, input: PartInput): Promise<Part> {
     const row = this.cleanPartInput(input);
     const { data, error } = await this.supabase.client
       .from('parts')
       .update(row)
       .eq('id', partId)
+      .eq('store_id', storeId)
       .select()
       .single();
     if (error) {
@@ -106,19 +115,23 @@ export class StoreService {
     return data as Part;
   }
 
-  async deletePart(partId: string): Promise<void> {
-    const { error } = await this.supabase.client.from('parts').delete().eq('id', partId);
+  async deletePart(storeId: string, partId: string): Promise<void> {
+    const { error } = await this.supabase.client
+      .from('parts')
+      .delete()
+      .eq('id', partId)
+      .eq('store_id', storeId);
     if (error) {
       throw error;
     }
   }
 
-  async addPartsBulk(
-    storeId: string,
-    inputs: PartInput[],
-  ): Promise<{ inserted: number }> {
+  async addPartsBulk(storeId: string, inputs: PartInput[]): Promise<{ inserted: number }> {
     if (inputs.length === 0) {
       return { inserted: 0 };
+    }
+    if (inputs.length > SPREADSHEET_MAX_DATA_ROWS) {
+      throw new Error(`الحد الأقصى للاستيراد ${SPREADSHEET_MAX_DATA_ROWS} قطعة في المرة الواحدة`);
     }
 
     const rows = inputs.map((input) => ({
@@ -133,9 +146,7 @@ export class StoreService {
       const batch = rows.slice(i, i + batchSize);
       const { error } = await this.supabase.client.from('parts').insert(batch);
       if (error) {
-        throw new Error(
-          `فشل الاستيراد عند السطر ${i + 1}: ${error.message}`,
-        );
+        throw new Error(`فشل الاستيراد عند السطر ${i + 1}: ${error.message}`);
       }
       inserted += batch.length;
     }

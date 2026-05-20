@@ -11,11 +11,7 @@ import { Card } from 'primeng/card';
 import { Dialog } from 'primeng/dialog';
 import { InputText } from 'primeng/inputtext';
 import { MessageService } from 'primeng/api';
-import {
-  AiSuggesterService,
-  BuildLevel,
-  UseCase,
-} from '../../core/services/ai-suggester.service';
+import { AiSuggesterService, BuildLevel, UseCase } from '../../core/services/ai-suggester.service';
 import { PartsService } from '../../core/services/parts.service';
 import { SupabaseService } from '../../core/services/supabase.service';
 import { AuthService } from '../../core/services/auth.service';
@@ -109,7 +105,7 @@ export class AiSuggesterComponent implements OnInit {
   }
 
   reloadParts(): void {
-    void this.partsService.loadParts();
+    void this.partsService.loadParts(true);
   }
 
   useCaseLabel(): string {
@@ -151,9 +147,7 @@ export class AiSuggesterComponent implements OnInit {
       );
       this.suggestedBuild.set(build);
     } catch (e) {
-      this.error.set(
-        e instanceof Error ? e.message : this.translate.instant('auth.errorGeneric'),
-      );
+      this.error.set(e instanceof Error ? e.message : this.translate.instant('auth.errorGeneric'));
     } finally {
       this.loading.set(false);
     }

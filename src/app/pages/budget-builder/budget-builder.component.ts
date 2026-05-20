@@ -10,7 +10,12 @@ import { BuildLoadService } from '../../core/services/build-load.service';
 @Component({
   selector: 'app-budget-builder',
   standalone: true,
-  imports: [BuildEditorComponent, BuildProgressBannerComponent, PageHeaderComponent, TranslateModule],
+  imports: [
+    BuildEditorComponent,
+    BuildProgressBannerComponent,
+    PageHeaderComponent,
+    TranslateModule,
+  ],
   templateUrl: './budget-builder.component.html',
   styleUrl: './budget-builder.component.scss',
 })

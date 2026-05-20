@@ -1,14 +1,6 @@
 import { PartType } from '../models/part.model';
 
-export const PART_TYPES: PartType[] = [
-  'CPU',
-  'Motherboard',
-  'GPU',
-  'RAM',
-  'Case',
-  'PSU',
-  'Cooler',
-];
+export const PART_TYPES: PartType[] = ['CPU', 'Motherboard', 'GPU', 'RAM', 'Case', 'PSU', 'Cooler'];
 
 export const PART_TYPE_LABELS: Record<PartType, string> = {
   CPU: 'المعالج',

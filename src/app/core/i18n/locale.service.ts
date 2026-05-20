@@ -50,7 +50,6 @@ export class LocaleService {
     const html = this.document.documentElement;
     html.lang = lang;
     html.dir = lang === 'ar' ? 'rtl' : 'ltr';
-    this.document.title =
-      lang === 'ar' ? 'تجميعتي — Tagmi3ti' : 'Tagmi3ti — PC Builder Egypt';
+    this.document.title = lang === 'ar' ? 'تجميعتي — Tagmi3ti' : 'Tagmi3ti — PC Builder Egypt';
   }
 }

@@ -1,17 +1,17 @@
-    :host ::ng-deep .ai-select.p-selectbutton {
-      display: flex;
-      width: 100%;
-    }
+:host ::ng-deep .ai-select.p-selectbutton {
+  display: flex;
+  width: 100%;
+}
 
-    :host ::ng-deep .ai-select.p-selectbutton .p-togglebutton {
-      flex: 1 1 0;
-      justify-content: center;
-    }
+:host ::ng-deep .ai-select.p-selectbutton .p-togglebutton {
+  flex: 1 1 0;
+  justify-content: center;
+}
 
-    :host ::ng-deep .ai-submit {
-      margin-top: 0.25rem;
-    }
+:host ::ng-deep .ai-submit {
+  margin-top: 0.25rem;
+}
 
-    :host ::ng-deep .ai-result .p-card-body {
-      padding-top: 0;
-    }
+:host ::ng-deep .ai-result .p-card-body {
+  padding-top: 0;
+}

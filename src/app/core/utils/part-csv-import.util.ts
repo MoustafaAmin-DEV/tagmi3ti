@@ -14,18 +14,18 @@ export interface CsvImportResult {
 
 const HEADER_MAP: Record<string, keyof PartInput> = {
   name: 'name',
-  'الاسم': 'name',
+  الاسم: 'name',
   type: 'type',
-  'النوع': 'type',
+  النوع: 'type',
   brand: 'brand',
-  'العلامة': 'brand',
+  العلامة: 'brand',
   socket: 'socket',
-  'السوكت': 'socket',
+  السوكت: 'socket',
   chipset: 'chipset',
-  'الشيبست': 'chipset',
+  الشيبست: 'chipset',
   ram_type: 'ram_type',
   ramtype: 'ram_type',
-  'نوع_الرام': 'ram_type',
+  نوع_الرام: 'ram_type',
   ram_slots: 'ram_slots',
   max_ram_gb: 'max_ram_gb',
   tdp_watts: 'tdp_watts',
@@ -37,8 +37,8 @@ const HEADER_MAP: Record<string, keyof PartInput> = {
   form_factor: 'form_factor',
   market_price_egp: 'market_price_egp',
   price: 'market_price_egp',
-  'السعر': 'market_price_egp',
-  'سعر_السوق': 'market_price_egp',
+  السعر: 'market_price_egp',
+  سعر_السوق: 'market_price_egp',
 };
 
 const NUMERIC_FIELDS: (keyof PartInput)[] = [
@@ -52,6 +52,12 @@ const NUMERIC_FIELDS: (keyof PartInput)[] = [
 ];
 
 const VALID_TYPES = new Set<string>(PART_TYPES);
+
+/** Max upload size for CSV / Excel import (store dashboard) */
+export const SPREADSHEET_MAX_BYTES = 2 * 1024 * 1024;
+
+/** Max data rows per import (excluding header) */
+export const SPREADSHEET_MAX_DATA_ROWS = 2000;
 
 export const PARTS_CSV_TEMPLATE = `name,type,brand,socket,chipset,ram_type,ram_slots,max_ram_gb,tdp_watts,max_gpu_length_mm,psu_wattage,gpu_length_mm,form_factor,market_price_egp
 AMD Ryzen 5 5600,CPU,AMD,AM4,,DDR4,,,65,,,,,5800
@@ -70,8 +76,17 @@ export function downloadPartsCsvTemplate(): void {
   URL.revokeObjectURL(url);
 }
 
+function assertSpreadsheetSize(file: File): void {
+  if (file.size > SPREADSHEET_MAX_BYTES) {
+    const maxMb = SPREADSHEET_MAX_BYTES / (1024 * 1024);
+    throw new Error(`حجم الملف كبير جدًا — الحد الأقصى ${maxMb} ميجابايت`);
+  }
+}
+
 /** تحويل أول ورقة Excel إلى CSV ثم تحليلها */
 export async function parsePartsSpreadsheet(file: File): Promise<CsvImportResult> {
+  assertSpreadsheetSize(file);
+
   const name = file.name.toLowerCase();
   if (name.endsWith('.csv') || file.type.includes('csv') || file.type.includes('text')) {
     const text = await file.text();
@@ -80,7 +95,10 @@ export async function parsePartsSpreadsheet(file: File): Promise<CsvImportResult
   if (name.endsWith('.xlsx') || name.endsWith('.xls')) {
     const XLSX = await import('xlsx');
     const buf = await file.arrayBuffer();
-    const wb = XLSX.read(buf, { type: 'array' });
+    const wb = XLSX.read(buf, {
+      type: 'array',
+      sheetRows: SPREADSHEET_MAX_DATA_ROWS + 1,
+    });
     const sheet = wb.Sheets[wb.SheetNames[0]];
     const csv = XLSX.utils.sheet_to_csv(sheet);
     return parsePartsCsv(csv);
@@ -89,12 +107,27 @@ export async function parsePartsSpreadsheet(file: File): Promise<CsvImportResult
 }
 
 export function parsePartsCsv(text: string): CsvImportResult {
-  const lines = text.replace(/^\ufeff/, '').split(/\r?\n/).filter((l) => l.trim());
+  const lines = text
+    .replace(/^\ufeff/, '')
+    .split(/\r?\n/)
+    .filter((l) => l.trim());
   const parts: PartInput[] = [];
   const errors: CsvImportRowError[] = [];
 
   if (lines.length < 2) {
-    errors.push({ row: 0, message: 'الملف فارغ أو لا يحتوي على بيانات (سطر عنوان + سطر واحد على الأقل)' });
+    errors.push({
+      row: 0,
+      message: 'الملف فارغ أو لا يحتوي على بيانات (سطر عنوان + سطر واحد على الأقل)',
+    });
+    return { parts, errors };
+  }
+
+  const dataRowCount = lines.length - 1;
+  if (dataRowCount > SPREADSHEET_MAX_DATA_ROWS) {
+    errors.push({
+      row: 0,
+      message: `عدد الصفوف (${dataRowCount}) يتجاوز الحد الأقصى ${SPREADSHEET_MAX_DATA_ROWS}`,
+    });
     return { parts, errors };
   }
 
@@ -197,9 +230,9 @@ function normalizePartType(raw: string): PartType | null {
     psu: 'PSU',
     cooler: 'Cooler',
     معالج: 'CPU',
-    'لوحة': 'Motherboard',
+    لوحة: 'Motherboard',
     'لوحة أم': 'Motherboard',
-    'كارت': 'GPU',
+    كارت: 'GPU',
     'كارت شاشة': 'GPU',
     رام: 'RAM',
     كيس: 'Case',

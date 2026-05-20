@@ -1,16 +1,10 @@
 import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { RxwebValidators } from '@rxweb/reactive-form-validators';
-import { phoneDigits } from './form-control.util';
+import { optionalEgyptPhoneValidator } from '../utils/phone-policy.util';
 
-/** هاتف اختياري — يُتحقق فقط عند الإدخال */
+/** هاتف موبايل مصري اختياري — يُتحقق فقط عند الإدخال */
 export function optionalPhoneValidator(): ValidatorFn {
-  return (control: AbstractControl): ValidationErrors | null => {
-    const digits = phoneDigits(control.value);
-    if (!digits) {
-      return null;
-    }
-    return digits.length >= 10 && digits.length <= 15 ? null : { phoneInvalid: true };
-  };
+  return optionalEgyptPhoneValidator();
 }
 
 /** رقم اختياري ≥ 0 عند وجود قيمة */

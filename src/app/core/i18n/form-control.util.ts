@@ -34,6 +34,14 @@ export function controlErrorMessage(
       return translate.instant('validation.required');
     case 'email':
       return translate.instant('validation.email');
+    case 'disposableEmail':
+      return translate.instant('validation.disposableEmail');
+    case 'maxLength': {
+      const max =
+        (payload as { requiredLength?: number })?.requiredLength ??
+        (payload as { maxLength?: number })?.maxLength;
+      return translate.instant('validation.maxLength', { count: max ?? 80 });
+    }
     case 'minLength': {
       const min =
         (payload as { requiredLength?: number })?.requiredLength ??
@@ -49,6 +57,8 @@ export function controlErrorMessage(
     case 'pattern':
     case 'phoneInvalid':
       return translate.instant('validation.phone');
+    case 'phoneRequired':
+      return translate.instant('validation.phoneRequired');
     case 'urlInvalid':
       return translate.instant('validation.url');
     case 'numericRange': {

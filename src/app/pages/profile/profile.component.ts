@@ -11,6 +11,7 @@ import { ProfileService } from '../../core/services/profile.service';
 import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
 import { showControlError } from '../../core/i18n/form-control.util';
 import { optionalPhoneValidator } from '../../core/i18n/rxweb-validators.util';
+import { formatEgyptPhoneForStorage } from '../../core/utils/phone-policy.util';
 import { FieldErrorComponent } from '../../shared/components/field-error/field-error.component';
 
 @Component({
@@ -88,7 +89,7 @@ export class ProfileComponent implements OnInit {
     try {
       await this.profileService.upsertForUser(this.auth.requireUserId(), {
         display_name: raw.displayName.trim(),
-        phone: raw.phone.trim() || null,
+        phone: formatEgyptPhoneForStorage(raw.phone),
         city: raw.city.trim() || null,
       });
       this.messageService.add({

@@ -1,4 +1,6 @@
+import { TestBed } from '@angular/core/testing';
 import { describe, it, expect, beforeEach } from 'vitest';
+import { configureTestTranslate, provideTestTranslate } from '../i18n/test-translate';
 import { CompatibilityService } from './compatibility.service';
 import { Part, PartType } from '../models/part.model';
 
@@ -15,7 +17,11 @@ describe('CompatibilityService', () => {
   let service: CompatibilityService;
 
   beforeEach(() => {
-    service = new CompatibilityService();
+    TestBed.configureTestingModule({
+      providers: [CompatibilityService, provideTestTranslate()],
+    });
+    configureTestTranslate();
+    service = TestBed.inject(CompatibilityService);
   });
 
   it('returns no issues when parts are compatible', () => {

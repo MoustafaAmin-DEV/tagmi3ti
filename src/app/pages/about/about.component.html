@@ -1,78 +1,78 @@
-    <app-page-header
-        [title]="'about.title' | translate"
-        icon="pi-info-circle"
-        [description]="'about.description' | translate"
-      />
+<app-page-header
+  [title]="'about.title' | translate"
+  icon="pi-info-circle"
+  [description]="'about.description' | translate"
+/>
 
-      <div class="grid page-split-grid">
-        <div class="col-12 lg:col-4">
-          <div class="page-aside-shell">
-            <aside class="page-aside surface-panel h-full p-3">
-              <div class="page-aside__hero">
-                <span class="page-aside__icon" aria-hidden="true">
-                  <i class="pi pi-compass"></i>
-                </span>
-                <h3 class="m-0">{{ 'about.navTitle' | translate }}</h3>
-              </div>
-              <ul class="page-aside__list">
-                <li>
-                  <i class="pi pi-check-circle"></i>
-                  <span>{{ 'about.nav1' | translate }}</span>
-                </li>
-                <li>
-                  <i class="pi pi-shop"></i>
-                  <span>{{ 'about.nav2' | translate }}</span>
-                </li>
-              </ul>
-            </aside>
-          </div>
+<div class="grid page-split-grid">
+  <div class="col-12 lg:col-4">
+    <div class="page-aside-shell">
+      <aside class="page-aside surface-panel p-3">
+        <div class="page-aside__hero">
+          <span class="page-aside__icon" aria-hidden="true">
+            <i class="pi pi-compass"></i>
+          </span>
+          <h3 class="m-0">{{ 'about.navTitle' | translate }}</h3>
         </div>
-        <div class="col-12 lg:col-8">
-          <div class="grid">
-            <div class="col-12 lg:col-6">
-              <p-card [header]="'about.whatTitle' | translate">
-                <ul class="line-height-3 m-0 pl-3">
-                  <li>{{ 'about.what1' | translate }}</li>
-                  <li>{{ 'about.what2' | translate }}</li>
-                  <li>{{ 'about.what3' | translate }}</li>
-                  <li>{{ 'about.what4' | translate }}</li>
-                  <li>{{ 'about.what5' | translate }}</li>
-                </ul>
-              </p-card>
-            </div>
-            <div class="col-12 lg:col-6">
-              <p-card [header]="'about.whoTitle' | translate">
-                <p class="line-height-3 mt-0">
-                  {{ 'about.whoBody' | translate }}
-                </p>
-                <p class="line-height-3 text-color-secondary text-sm m-0">
-                  {{ 'about.whoNote' | translate }}
-                </p>
-              </p-card>
-            </div>
-            <div class="col-12">
-              <p-card [header]="'about.startTitle' | translate">
-                <div class="flex flex-wrap gap-2">
-                  <p-button
-                    [label]="'about.ctaChecker' | translate"
-                    icon="pi pi-check-circle"
-                    routerLink="/checker"
-                  />
-                  <p-button
-                    [label]="'about.ctaBudget' | translate"
-                    icon="pi pi-wrench"
-                    routerLink="/budget"
-                    [outlined]="true"
-                  />
-                  <p-button
-                    [label]="'about.ctaPrivacy' | translate"
-                    icon="pi pi-shield"
-                    routerLink="/privacy"
-                    [text]="true"
-                  />
-                </div>
-              </p-card>
-            </div>
-          </div>
-        </div>
+        <ul class="page-aside__list">
+          <li>
+            <i class="pi pi-check-circle"></i>
+            <span>{{ 'about.nav1' | translate }}</span>
+          </li>
+          <li>
+            <i class="pi pi-shop"></i>
+            <span>{{ 'about.nav2' | translate }}</span>
+          </li>
+        </ul>
+      </aside>
+    </div>
+  </div>
+  <div class="col-12 lg:col-8">
+    <div class="grid">
+      <div class="col-12 lg:col-6">
+        <p-card [header]="'about.whatTitle' | translate">
+          <ul class="line-height-3 m-0 pl-3">
+            <li>{{ 'about.what1' | translate }}</li>
+            <li>{{ 'about.what2' | translate }}</li>
+            <li>{{ 'about.what3' | translate }}</li>
+            <li>{{ 'about.what4' | translate }}</li>
+            <li>{{ 'about.what5' | translate }}</li>
+          </ul>
+        </p-card>
       </div>
+      <div class="col-12 lg:col-6">
+        <p-card [header]="'about.whoTitle' | translate">
+          <p class="line-height-3 mt-0">
+            {{ 'about.whoBody' | translate }}
+          </p>
+          <p class="line-height-3 text-color-secondary text-sm m-0">
+            {{ 'about.whoNote' | translate }}
+          </p>
+        </p-card>
+      </div>
+      <div class="col-12">
+        <p-card [header]="'about.startTitle' | translate">
+          <div class="flex flex-wrap gap-2">
+            <p-button
+              [label]="'about.ctaChecker' | translate"
+              icon="pi pi-check-circle"
+              routerLink="/checker"
+            />
+            <p-button
+              [label]="'about.ctaBudget' | translate"
+              icon="pi pi-wrench"
+              routerLink="/budget"
+              [outlined]="true"
+            />
+            <p-button
+              [label]="'about.ctaPrivacy' | translate"
+              icon="pi pi-shield"
+              routerLink="/privacy"
+              [text]="true"
+            />
+          </div>
+        </p-card>
+      </div>
+    </div>
+  </div>
+</div>
