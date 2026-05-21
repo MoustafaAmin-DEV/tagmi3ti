@@ -6,7 +6,7 @@
 }
 
 .app-navbar {
-  background: color-mix(in srgb, var(--p-surface-0) 88%, transparent);
+  background: color-mix(in srgb, var(--p-content-background) 90%, transparent);
   backdrop-filter: blur(14px);
   border-bottom: 1px solid var(--p-content-border-color);
 }
@@ -50,6 +50,7 @@
   font-weight: 600;
   font-size: 0.8125rem;
   white-space: nowrap;
+  color: var(--p-text-color);
   transition:
     background 0.15s ease,
     color 0.15s ease;
@@ -65,8 +66,8 @@
 }
 
 .desktop-nav__link--active {
-  background: color-mix(in srgb, var(--p-primary-500) 14%, transparent);
-  color: var(--p-primary-700);
+  background: color-mix(in srgb, var(--p-primary-500) 18%, transparent);
+  color: var(--p-primary-400);
 }
 
 .navbar-profile-link {
@@ -81,12 +82,12 @@
 
 .navbar-profile-link:hover {
   background: color-mix(in srgb, var(--p-primary-500) 10%, transparent);
-  color: var(--p-primary-700);
+  color: var(--p-primary-400);
 }
 
 .navbar-profile-link--active {
-  background: color-mix(in srgb, var(--p-primary-500) 14%, transparent);
-  color: var(--p-primary-700);
+  background: color-mix(in srgb, var(--p-primary-500) 18%, transparent);
+  color: var(--p-primary-400);
 }
 
 .navbar-actions {
@@ -94,13 +95,17 @@
 }
 
 .mobile-nav {
-  background: var(--p-surface-0);
+  background: var(--p-content-background);
   border-bottom: 1px solid var(--p-content-border-color);
 }
 
+.mobile-nav__link {
+  color: var(--p-text-color);
+}
+
 .mobile-nav__link--active {
-  background: color-mix(in srgb, var(--p-primary-500) 14%, transparent);
-  color: var(--p-primary-700);
+  background: color-mix(in srgb, var(--p-primary-500) 18%, transparent);
+  color: var(--p-primary-400);
   font-weight: 700;
 }
 

@@ -1,6 +1,6 @@
 .app-footer {
   border-top: 1px solid var(--p-content-border-color);
-  background: color-mix(in srgb, var(--p-surface-0) 92%, transparent);
+  background: var(--p-content-background);
   margin-top: auto;
 }
 .footer-link {
@@ -11,5 +11,5 @@
   transition: color 0.15s;
 }
 .footer-link:hover {
-  color: var(--p-primary-600);
+  color: var(--p-primary-color);
 }

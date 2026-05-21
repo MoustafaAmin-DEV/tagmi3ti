@@ -459,3 +459,140 @@ a.no-underline {
   color: var(--p-red-500);
   line-height: 1.4;
 }
+
+/* —— Dark mode: readable text (لا تعكس توكنز surface في preset) —— */
+html.app-dark {
+  color-scheme: dark;
+  color: #e2e8f0;
+
+  --app-shadow: 0 4px 24px color-mix(in srgb, #000 35%, transparent);
+  --app-shadow-hover: 0 12px 40px color-mix(in srgb, var(--p-primary-500) 12%, transparent);
+
+  /* Footer / cards: لا تستخدم surface-0 الفاتح الافتراضي */
+  --p-content-background: #1e293b;
+  --p-content-border-color: #334155;
+  --p-surface-ground: #0f172a;
+  --p-text-color: #e2e8f0;
+  --p-text-muted-color: #94a3b8;
+
+  .text-color,
+  .text-color-secondary,
+  .p-card,
+  .p-card .p-card-body,
+  .p-card .p-card-title,
+  .p-card h3,
+  .section-title,
+  .page-title,
+  .page-desc,
+  .page-aside__hero h3,
+  .part-slot__label {
+    color: #e2e8f0;
+  }
+
+  .text-color-secondary,
+  .hero__subtitle,
+  .hero__stat-label,
+  .page-desc,
+  .page-aside__list li,
+  .page-tool-form-panel__hint,
+  .page-tool-form__hint,
+  .feature-card p,
+  .p-card .text-color-secondary {
+    color: #94a3b8 !important;
+  }
+
+  .desktop-nav__link,
+  .mobile-nav__link {
+    color: #cbd5e1;
+  }
+
+  .desktop-nav__link--active,
+  .mobile-nav__link--active {
+    color: #67e8f9;
+  }
+
+  .navbar-profile-link {
+    color: #e2e8f0;
+  }
+
+  .hero__badge {
+    color: #67e8f9;
+    background: color-mix(in srgb, var(--p-primary-500) 12%, transparent);
+    border-color: color-mix(in srgb, var(--p-primary-400) 28%, transparent);
+  }
+
+  .hero__title {
+    background: linear-gradient(135deg, #f8fafc 10%, #67e8f9 95%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .hero__stat-value {
+    color: #67e8f9;
+  }
+
+  .home-inline-strip {
+    background: color-mix(in srgb, var(--p-primary-500) 7%, #1e293b);
+    border-color: #334155;
+  }
+
+  .home-inline-strip span {
+    color: #e2e8f0;
+  }
+
+  .home-inline-strip i {
+    color: #67e8f9;
+  }
+
+  .page-header__icon {
+    color: #67e8f9;
+  }
+
+  .page-eyebrow {
+    color: #67e8f9;
+  }
+
+  .page-aside__list i,
+  .part-slot__icon {
+    color: #67e8f9;
+  }
+
+  .page-chip--muted {
+    background: #334155;
+    color: #e2e8f0;
+  }
+
+  .page-parts-rows__type {
+    color: #67e8f9;
+  }
+
+  .page-chip {
+    color: #a5f3fc;
+  }
+
+  .feature-card__icon {
+    color: #67e8f9;
+  }
+
+  .feature-card--gaming .feature-card__icon {
+    color: #c4b5fd;
+  }
+
+  .feature-card--store .feature-card__icon {
+    color: #fdba74;
+  }
+
+  .app-footer {
+    background: #1e293b;
+    border-top-color: #334155;
+  }
+
+  .footer-link {
+    color: #94a3b8;
+  }
+
+  .footer-link:hover {
+    color: #67e8f9;
+  }
+}

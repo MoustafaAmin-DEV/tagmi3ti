@@ -22,3 +22,13 @@
     ),
     var(--p-surface-ground);
 }
+
+:host-context(html.app-dark) .app-main {
+  background:
+    radial-gradient(
+      ellipse 80% 45% at 50% -15%,
+      color-mix(in srgb, var(--p-primary-500) 8%, transparent),
+      transparent
+    ),
+    var(--p-surface-ground);
+}
